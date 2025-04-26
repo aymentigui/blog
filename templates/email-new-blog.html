@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New article on DevBlog</title>
+  <style>
+    /* Basic email styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333333;
+      background-color: #f5f5f5;
+    }
+    table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    td {
+      padding: 0;
+    }
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    .wrapper {
+      width: 100%;
+      table-layout: fixed;
+      background-color: #f5f5f5;
+      padding-bottom: 40px;
+    }
+    .main {
+      background-color: #ffffff;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 600px;
+      border-spacing: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background: linear-gradient(to right, #9333ea, #ec4899);
+      padding: 20px;
+      text-align: center;
+    }
+    .header-logo {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .content {
+      padding: 30px;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .button {
+      background: linear-gradient(to right, #9333ea, #ec4899);
+      border-radius: 4px;
+      color: #ffffff;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+      padding: 12px 24px;
+      text-decoration: none;
+      text-transform: capitalize;
+    }
+    .social-icon {
+      display: inline-block;
+      margin: 0 5px;
+    }
+    .divider {
+      height: 1px;
+      width: 100%;
+      background-color: #e5e7eb;
+      margin: 20px 0;
+    }
+    .category-badge {
+      background-color: #e9d5ff;
+      color: #6b21a8;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .article-image {
+      width: 100%;
+      max-width: 540px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    @media screen and (max-width: 600px) {
+      .main {
+        width: 100%;
+        max-width: 100%;
+      }
+      .content {
+        padding: 20px;
+      }
+      .article-image {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <table class="main" width="100%">
+      <!-- HEADER -->
+      <tr>
+        <td class="header">
+          <a href="https://yourwebsite.com" class="header-logo">DevBlog</a>
+        </td>
+      </tr>
+      
+      <!-- CONTENT -->
+      <tr>
+        <td class="content">
+          <table width="100%">
+            <tr>
+              <td>
+                <h1 style="color: #111827; font-size: 24px; margin-top: 0;">New article published!</h1>
+                <p style="color: #4b5563; margin-bottom: 24px;">
+                  Hi,
+                </p>
+                <p style="color: #4b5563; margin-bottom: 24px;">
+                  We just published a new article on our blog that we think you'll love.
+                </p>
+                
+                {% for category in categories %}
+                <div class="category-badge">{{category}}</div>
+                {% endfor %}
+                
+                <h2 style="color: #111827; font-size: 22px; margin-top: 0; margin-bottom: 16px;">{{title}}</h2>
+                
+                {% comment %} <img src="{{image_url}}" alt="{{article_title}}" class="article-image"> {% endcomment %}
+                
+                <p style="color: #4b5563; margin-bottom: 24px;">
+                  {{description}}
+                </p>
+                
+                <table width="100%">
+                  <tr>
+                    <td align="center" style="padding: 20px 0;">
+                      <a href="{{url}}/blogs/{{slug}}" class="button">Read the full article</a>
+                    </td>
+                  </tr>
+                </table>
+                
+                <div class="divider"></div>
+                
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      
+      <!-- FOOTER -->
+      <tr>
+        <td class="footer">
+          <table width="100%">
+            <tr>
+              <td align="center" style="padding-bottom: 16px;">
+
+                <a href="https://github.com/aymentigui" class="social-icon">
+                  <img src="https://cdn-icons-png.flaticon.com/128/733/733553.png" alt="GitHub" width="24" height="24">
+                </a>
+                <a href="https://linkedin.com/in/aimen-abdelghafour-tighiouart-7866a725b" class="social-icon">
+                  <img src="https://cdn-icons-png.flaticon.com/128/3536/3536505.png" alt="LinkedIn" width="24" height="24">
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding-bottom: 16px;">
+                <p style="margin: 0 0 8px 0;">© 2025 DevBlog. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
+

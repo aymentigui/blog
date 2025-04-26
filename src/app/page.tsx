@@ -1,60 +1,387 @@
+"use client"
 
-// import ListBlogsCategories from './ListBlogsCategories'; // Assurez-vous que le chemin est correct
-// import ListBlog from './ListBlog'; // Assurez-vous que le chemin est correct
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import Image from "next/image"
+import Link from "next/link"
+import { ArrowRight, Code, Lightbulb, BookOpen, Search, Eye } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useTranslations } from "next-intl"
+import HeaderPublic from "@/components/my/public/header"
+import CardBlogAnimate from "@/components/my/public/card-blog-animate"
+import CardCategoryAnimate from "@/components/my/public/card-category-animate"
+import { getBlogsDesc } from "@/actions/blog/get"
+import Loading from "@/components/myui/loading"
+import { getBlogsCategoriesPublic } from "@/actions/blog/categories/get"
+import { fetchBlogs, fetchCategories } from "@/actions/blog/util-client"
+import FooterPublic from "@/components/my/footer-from"
 
-import HeaderPublic from "@/components/my/public/header";
-import ListBlogs from "./admin/blogs/_component/list-blogs";
-import Image from "next/image";
-import Link from "next/link";
 
-export default function Home() {
+
+// const recentArticles = [
+//   {
+//     id: 4,
+//     title: "Utiliser TypeScript avec React: Guide complet",
+//     excerpt: "Comment tirer le meilleur parti de TypeScript dans vos projets React pour un code plus robuste.",
+//     category: "TypeScript",
+//     date: "2 Avril 2025",
+//     readTime: "10 min",
+//     image: "/placeholder.svg?height=300&width=500",
+//     slug: "/blog/typescript-react-guide",
+//   },
+//   {
+//     id: 5,
+//     title: "Créer un thème sombre avec Tailwind CSS",
+//     excerpt: "Implémentez facilement un mode sombre/clair dans votre application Next.js avec Tailwind CSS.",
+//     category: "CSS",
+//     date: "28 Mars 2025",
+//     readTime: "7 min",
+//     image: "/placeholder.svg?height=300&width=500",
+//     slug: "/blog/theme-sombre-tailwind",
+//   },
+//   {
+//     id: 6,
+//     title: "Les Server Actions dans Next.js expliqués",
+//     excerpt: "Tout ce que vous devez savoir sur les Server Actions et comment les utiliser efficacement.",
+//     category: "Next.js",
+//     date: "25 Mars 2025",
+//     readTime: "9 min",
+//     image: "/placeholder.svg?height=300&width=500",
+//     slug: "/blog/server-actions-nextjs",
+//   },
+//   {
+//     id: 7,
+//     title: "Migration de WordPress vers Next.js",
+//     excerpt: "Guide étape par étape pour migrer votre site WordPress vers une application Next.js moderne.",
+//     category: "WordPress",
+//     date: "20 Mars 2025",
+//     readTime: "12 min",
+//     image: "/placeholder.svg?height=300&width=500",
+//     slug: "/blog/migration-wordpress-nextjs",
+//   },
+// ]
+
+// const components = [
+//   {
+//     id: 1,
+//     title: "Carousel d'images responsive",
+//     description: "Un composant de carousel d'images entièrement responsive avec navigation tactile.",
+//     category: "UI",
+//     downloads: 1245,
+//     slug: "/components/image-carousel",
+//   },
+//   {
+//     id: 2,
+//     title: "Formulaire d'authentification",
+//     description: "Un formulaire d'authentification complet avec validation et gestion des erreurs.",
+//     category: "Auth",
+//     downloads: 987,
+//     slug: "/components/auth-form",
+//   },
+//   {
+//     id: 3,
+//     title: "Tableau de données avancé",
+//     description: "Un tableau de données avec tri, filtrage et pagination côté client.",
+//     category: "Data",
+//     downloads: 756,
+//     slug: "/components/data-table",
+//   },
+// ]
+
+
+export default function HomePage() {
+  const translate = useTranslations("HomePage")
+
+  const [blogs, setBlogs] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [categories, setCategories] = useState<any[]>([])
+  const [isLoadingC, setIsLoadingC] = useState(false)
+
+  // const [searchQuery, setSearchQuery] = useState("")
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  }
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  useEffect(() => {
+    fetchBlogs(setBlogs,setIsLoading,1,3,undefined,"",[],"popular")
+    fetchCategories(setCategories,setIsLoadingC)
+  }, [])
+
+
+
   return (
-    <div className="h-screen">
-      {/* Header */}
+    <div className="flex flex-col min-h-screen">
       <HeaderPublic />
+      <div className="h-10"></div>
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 theme-ocean:from-purple-950/20 dark:to-pink-950/20 theme-ocean:to-pink-950/20 -z-10" />
+        <div className="absolute inset-0 bg-[url('/blog-landing.webp?height=100&width=100')] bg-repeat opacity-5 -z-10" />
 
-      {/* Welcome Banner */}
-      <section className="flex items-center justify-center bg-blue-500 text-white h-96 w-full relative">
-        <Image src="/blog-landing.webp" alt="" fill className="object-cover w-full h-full absolute z-0 top-0 right-0" />
-        <div className="text-3xl p-4 w-full h-full font-bold flex justify-center items-center absolute top-0 right-0 z-10">
-          <h1 className="text-center">Bienvenue sur notre site de blogs !</h1>
+        <motion.div initial="hidden" animate="visible" variants={fadeIn} className="container px-4 mx-auto text-center">
+          <Badge className="mb-4 bg-purple-100 text-purple-800 dark:bg-purple-900 theme-ocean:bg-purple-900 dark:text-purple-100 theme-ocean:text-purple-100 hover:bg-purple-100 dark:hover:bg-purple-900 theme-ocean:hover:bg-purple-900">
+            Next.js • React • TypeScript • JavaScript • PHP • WordPress
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            {translate("title")}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 theme-ocean:text-gray-300 max-w-3xl mx-auto mb-8">
+            {translate("description")}
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              {translate("browserarticles")}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button size="lg" variant="outline">
+              {translate("browsercomponents")}
+            </Button>
+          </div>
+
+          {/* <div className="max-w-md mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Rechercher des articles, composants..."
+                className="pl-10 pr-4 py-6 rounded-full border-gray-300 dark:border-gray-700 theme-ocean:border-gray-700 focus:ring-2 focus:ring-purple-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div> */}
+        </motion.div>
+      </section>
+
+      {/* Featured Articles */}
+      <section className="py-16 bg-white dark:bg-gray-950 theme-ocean:bg-background">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="flex flex-col md:flex-row justify-between items-center mb-12"
+          >
+            <h2 className="text-3xl font-bold">{translate("articlesmostviewed")}</h2>
+            <Link
+              href="/blog"
+              className="text-purple-600 dark:text-purple-400 theme-ocean:text-purple-400 hover:underline flex items-center mt-4 md:mt-0"
+            >
+              {translate("allarticles")}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </motion.div>
+
+          {
+            isLoading
+              ? <div className=" w-full h-24 flex justify-center items-center">
+                <Loading />
+              </div>
+              : <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="grid grid-cols-1 md:grid-cols-3 gap-8"
+              >
+                {blogs.map((article, index) => (
+                  <CardBlogAnimate key={index} article={article} />
+                ))}
+              </motion.div>
+          }
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section id="categories" className="p-4 border rounded-md m-3">
-        <h2 className="text-2xl font-semibold mb-1">Nos Catégories de Blogs</h2>
-        <div className="flex gap-4 overflow-auto w-full p-4">
-          <Link href={"/"} className="min-w-[150px] hover:bg-amber-600 bg-amber-500 text-white border rounded-3xl shadow p-2 flex justify-center items-center">
-            <p>Name categorie </p>
-          </Link>
+      {/* Categories */}
+      {
+        isLoadingC
+        ?
+        <section className="py-16 bg-gray-50 flex justify-center items-center dark:bg-gray-900 theme-ocean:bg-gray-900">
+          <Loading />
+        </section>
+        :
+        categories.length > 0 &&
+        <section className="py-16 bg-gray-50 dark:bg-gray-900 theme-ocean:bg-gray-900">
+          <div className="container px-4 mx-auto">
+            <motion.h2
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-3xl font-bold text-center mb-12"
+            >
+              {translate("browsercategories")}
+            </motion.h2>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={staggerContainer}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {categories.map((category, index): any => (
+                <CardCategoryAnimate key={index} index={index} title={category.title} />
+              ))}
+            </motion.div>
+          </div>
+        </section>
+      }
+
+      {/* Recent Content Tabs */}
+      {/* <section className="py-16 bg-white dark:bg-gray-950 theme-ocean:bg-gray-950">
+        <div className="container px-4 mx-auto">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold text-center mb-12"
+          >
+            Contenu récent
+          </motion.h2>
+
+          <Tabs defaultValue="articles" className="w-full">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
+              <TabsTrigger value="articles">Articles</TabsTrigger>
+              <TabsTrigger value="components">Composants</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="articles">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8"
+              >
+                {recentArticles.map((article) => (
+                  <motion.div key={article.id} variants={fadeIn} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
+                    <Link href={article.slug}>
+                      <Card className="overflow-hidden flex flex-col md:flex-row h-full hover:shadow-lg transition-shadow duration-300">
+                        <div className="relative h-48 md:h-auto md:w-1/3 flex-shrink-0">
+                          <Image
+                            src={article.image || "/placeholder.svg"}
+                            alt={article.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="flex-1 p-6">
+                          <Badge className="mb-2">{article.category}</Badge>
+                          <h3 className="text-lg font-bold mb-2 line-clamp-2">{article.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-400 theme-ocean:text-gray-400 text-sm line-clamp-2 mb-2">
+                            {article.excerpt}
+                          </p>
+                          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 theme-ocean:text-gray-400 mt-auto">
+                            <span>{article.date}</span>
+                            <span className="mx-2">•</span>
+                            <span>{article.readTime} de lecture</span>
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </TabsContent>
+
+            <TabsContent value="components">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                {components.map((component) => (
+                  <motion.div
+                    key={component.id}
+                    variants={fadeIn}
+                    whileHover={{ y: -5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Link href={component.slug}>
+                      <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                        <CardContent className="pt-6">
+                          <Badge className="mb-2">{component.category}</Badge>
+                          <h3 className="text-xl font-bold mb-2">{component.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-400 theme-ocean:text-gray-400 mb-4">{component.description}</p>
+                          <div className="text-sm text-gray-500 dark:text-gray-400 theme-ocean:text-gray-400">
+                            {component.downloads} téléchargements
+                          </div>
+                        </CardContent>
+                        <CardFooter className="pt-0">
+                          <span className="text-purple-600 dark:text-purple-400 theme-ocean:text-purple-400 font-medium flex items-center">
+                            Voir le composant
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </span>
+                        </CardFooter>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </TabsContent>
+          </Tabs>
         </div>
-        {/* <ListBlogsCategories /> */}
+      </section> */}
+
+      {/* Arabic Content Section */}
+      <section className="py-16 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 theme-ocean:from-purple-950/20 dark:to-pink-950/20 theme-ocean:to-pink-950/20">
+        <div className="container px-4 mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            <Badge className="mb-4 bg-purple-100 text-purple-800 dark:bg-purple-900 theme-ocean:bg-purple-900 dark:text-purple-100 theme-ocean:text-purple-100 hover:bg-purple-100 dark:hover:bg-purple-900 theme-ocean:hover:bg-purple-900">
+              محتوى باللغة العربية
+            </Badge>
+            <h2 className="text-3xl font-bold mb-4">{translate("contentarabictitle")}</h2>
+            <p className="text-gray-700 dark:text-gray-300 theme-ocean:text-gray-300 mb-8">
+              {translate("contentarabicdescription")}
+            </p>
+            <Link href="https://instagram.com/tigui_tech" target="_blank" rel="noopener noreferrer">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                {translate("viewininstagram")}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
       </section>
 
-      {/* Blogs Section */}
-      <section id="blogs" className="p-6">
-        <h2 className="text-2xl font-semibold mb-4">Nos Derniers Blogs</h2>
-        <ListBlogs isHideTable hideAction hidePagination hideSearch hideFliterPageSize />
-      </section>
-
-      {/* About me Section */}
-      <section id="about" className="p-10 border-b border-t grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center items-center rounded-md m-3 gap-4">
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="text-2xl font-semibold mb-1 italic">A propos de moi</h2>
-          <p className="text-center text-l italic">Je suis un développeur web passionné par l'innovation et l'optimisation des processus de développement. J'ai commencé avec des projets personnels et je suis maintenant impliqué dans des projets professionnels qui utilisent Next.js et React.js</p>
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="text-2xl font-semibold mb-1 italic">Ma Mission</h2>
-          <p className="text-center text-l italic">Mon objectif est de fournir des ressources précieuses et des tutoriels détaillés sur le développement web, tant pour les débutants que pour les experts.</p>
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="text-2xl font-semibold mb-1 italic">Mes Competences</h2>
-          <p className="text-center text-l italic">Je suis développeur web avec une expertise en Next.js, React.js, PHP et WordPress. Je me spécialise dans l'intégration front-end et back-end, tout en optimisant les performances des applications web pour offrir une expérience fluide et rapide.</p>
-        </div>
-      </section>
-
-      <div className="h-[200px]"></div>
+      {/* Newsletter */}
+      <FooterPublic/>
     </div>
-  );
+  )
 }

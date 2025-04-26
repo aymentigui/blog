@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import DivStart from "@/components/my/public/div-start";
 
 const cairo = Cairo({
   subsets: ['latin'], // Sous-ensembles pour les caractères spécifiques
@@ -39,6 +40,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
+             <DivStart />
             {children}
           </NextIntlClientProvider>
         </ThemeProvider>

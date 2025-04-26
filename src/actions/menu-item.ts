@@ -1,5 +1,5 @@
 "use server"
-import { ChartBarStacked, CircleEllipsis, CirclePlus, Download, File, FileSpreadsheet, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
+import { ChartBarStacked, CircleEllipsis, CirclePlus, Download, File, FileSpreadsheet, Heart, Home, Newspaper, Settings, UserRoundCog, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getUserPermissions, verifySession } from "./permissions";
 
@@ -57,6 +57,13 @@ const itemsMenu = async () => {
                     permissions: ["blogs_categories_view"],
                 },
             ],
+        },
+        {
+            title: Menu("blogsreaction"),
+            url: "/admin/reactions",
+            icon: Heart,
+            admin: false,
+            permissions: [],
         },
         {
             title: Menu("files"),

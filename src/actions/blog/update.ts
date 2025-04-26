@@ -25,19 +25,19 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
         }
 
         let contents = await UploadFilesContent(components, session.data.user.id)
-        if(!slug || !slug.length) slug = await generateSlug(titles[0].value);
-        
+        if (!slug || !slug.length) slug = await generateSlug(titles[0].value);
+
         const imageBlog = await prisma.blog.findUnique({ where: { id }, select: { image: true } });
         let url = "";
         if (image) {
             const res = await uploadFileDB(image, session.data.user.id)
-            if(res.status === 200) {
+            if (res.status === 200) {
                 url = res.data.file.id
             }
         }
-        if (imageBlog?.image && (url!=="" || deleteImage)) {
+        if (imageBlog?.image && (url !== "" || deleteImage)) {
             await deleteFileDb(imageBlog.image);
-        }else if(imageBlog?.image && !deleteImage) {
+        } else if (imageBlog?.image && !deleteImage) {
             url = imageBlog.image
         }
 
@@ -62,7 +62,7 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
                 },
                 contents: {
                     deleteMany: {},
-                    create: contents.map((content: any,index) => ({
+                    create: contents.map((content: any, index) => ({
                         type: content.type,
                         data: JSON.stringify(content.value),
                         language: content.langage || "en",
@@ -88,9 +88,9 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
 const UploadFilesContent = async (components: any[], userId: string) => {
 
     const Contents = components.map(async (component) => {
-        
+
         if ((component.type === 'image' || component.type === 'video' || component.type === 'file') && component.value) {
-            if(component.value.url) return component
+            if (component.value.url) return component
             const file = await uploadFileDB(component.value.file, userId)
             if (file.status === 200 && file.data.file) {
                 return {
@@ -120,4 +120,14 @@ const generateSlug = async (title: string) => {
         return `${slug}-${count}`;
     }
     return slug;
+}
+
+export async function incrementBlogView(id: string) {
+    await prisma.blog.update({
+        where: { id: id },
+        data: { views: { increment: 1 } },
+    });
+    await prisma.blogs_view.create({
+        data: { blog_id: id },
+    });
 }

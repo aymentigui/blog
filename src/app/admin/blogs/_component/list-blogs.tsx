@@ -33,7 +33,7 @@ const ListBlogs = ({ isHideTable, hideAction, hidePagination, hideSearch, hideFl
     useEffect(() => {
         setMounted(true);
     }, []);
-    
+
 
     useEffect(() => {
         fetchBlogs();
@@ -46,33 +46,14 @@ const ListBlogs = ({ isHideTable, hideAction, hidePagination, hideSearch, hideFl
         try {
             if (!origin) return
             setIsLoading(true);
-            const res = await getBlogsDesc(page, pageSize, debouncedSearchQuery)
+            const res = await getBlogsDesc(page, pageSize, debouncedSearchQuery, locale)
 
             if (res.status === 200 && res.data) {
-                const newBlogs = []
-                for (const blog of res.data) {
-                    const title = blog.titles.find((title: any) => title.language === locale)?.title ??
-                        blog.titles.find((title: any) => title.language === 'en')?.title ??
-                        blog.titles ? blog.titles[0].title : ""
-                    const description = blog.description.find((desc: any) => desc.language === locale)?.description ??
-                        blog.description.find((desc: any) => desc.language === 'en')?.description ??
-                        blog.description[0] ? blog.description[0].description : ""
-
-                    newBlogs.push({
-                        id: blog.id,
-                        title: title,
-                        description: description,
-                        image: (blog.image && blog.image !== "") ? blog.image : null,
-                        categories: blog.categories.map((category: any) => {
-                            if (locale === "en") return category.name
-                            if (locale === "fr") return category.namefr ?? category.name
-                            if (locale === "ar") return category.namear ?? category.name
-                        }).join(", "),
-                        created_at: blog.created_at,
-                        updated_at: blog.updated_at
-                    })
-                }
-                setData(newBlogs)
+                const newData= res.data.map((blog:any)=>({
+                    ...blog,
+                    categories: blog.categories.join(", ")
+                }))
+                setData(newData);
             }
 
             const countResponse = await getBlogsCount(debouncedSearchQuery)
@@ -98,7 +79,7 @@ const ListBlogs = ({ isHideTable, hideAction, hidePagination, hideSearch, hideFl
     return (
         <div>
             <div className='flex items-center justify-between'>
-               {!hideFliterPageSize && <div className='w-48 mb-2'>
+                {!hideFliterPageSize && <div className='w-48 mb-2'>
                     <SelectFetch
                         value={pageSize.toString()}
                         onChange={(val) => setPageSize(Number(val))}

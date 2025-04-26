@@ -1,9 +1,6 @@
 "use client"
 
-import * as React from "react"
-import { Moon, MoonIcon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-
+import React, { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -12,20 +9,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTranslations } from "next-intl"
-import { useSession } from "@/hooks/use-session"
+import { useRouter } from "next/navigation"
+import { useSession } from '@/hooks/use-session'
+import { logoutUser } from '@/actions/auth/auth'
 
 export function UserRegisterLogin() {
   const translate = useTranslations("System")
-  const { session } = useSession()
-  console.log(session)
+  const { session, setSession } = useSession()
+
+  const router = useRouter()
 
   const handleThemeChange = (theme: string) => {
   }
 
+  const logout = async () => {
+    const response = await logoutUser();
+    if (response.status === 200) {
+      setSession({})
+      router.push("/")
+    }
+  };
+
   return (
     <>
       {!session|| !session.data || !session.data.user|| !session.data.user.id ?
-        <Button className="w-auto flex px-3 " variant="outline" size="icon">
+        <Button onClick={()=> router.push("/auth/login")} className="w-auto flex px-3 " variant="outline" size="icon">
           <span className=" h-[1.2rem] transition-all rotate-0 scale-100">{translate("registerorlogin")}</span>
         </Button>
         :
@@ -36,13 +44,13 @@ export function UserRegisterLogin() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleThemeChange("light")}>
+            <DropdownMenuItem onClick={() => router.push("/admin")}>
               {translate("dashboard")}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
+            <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
               {translate("settings")}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleThemeChange("theme-ocean")}>
+            <DropdownMenuItem onClick={logout}>
               {translate("logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>

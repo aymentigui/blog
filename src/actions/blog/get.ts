@@ -56,21 +56,35 @@ export async function getBlogs(page: number = 1, pageSize: number = 10, searchQu
 }
 
 
-export async function getBlogsDesc(page: number = 1, pageSize: number = 10, searchQuery?: string): Promise<{ status: number, data: any }> {
+export async function getBlogsDesc(page: number = 1, pageSize: number = 10, searchQuery?: string, lang?: string, serachCategories: string[] = [], sortedBy?: string): Promise<{ status: number, data: any, count: number }> {
     const e = await getTranslations('Error');
+    
+    const locale = lang && lang !== "" ? lang : await getLocale()
 
     try {
 
         const skip = (page - 1) * pageSize;
 
+        let conditions = searchQuery ? {
+            OR : [
+                { slug: { contains: searchQuery } },
+                { titles: { some: { title: { contains: searchQuery } } } },
+                { description: { some: { description: { contains: searchQuery } } } },
+            ]
+        } : {};
+
+        if (serachCategories.length > 0) {
+            //@ts-ignore
+            conditions.AND = [
+                { categories: { some: { id: { in: serachCategories } } } },
+            ]
+        }
+
         const blogs = await prisma.blog.findMany({
             skip: skip,
             take: pageSize,
-            where: searchQuery ? {
-                slug: {
-                    contains: searchQuery
-                }
-            } : {},
+            where: conditions,
+            orderBy: sortedBy && sortedBy==="popular" ? { views: 'desc' } : { createdAt: 'desc' },
             include: {
                 categories: true,
                 titles: {
@@ -93,11 +107,43 @@ export async function getBlogsDesc(page: number = 1, pageSize: number = 10, sear
             }
         });
 
+        const count = await prisma.blog.count({ where: conditions });
 
-        return { status: 200, data: blogs };
+        const blogsFormatted = blogs.map((blog) => (
+            {
+                ...blog,
+                image: (blog.image && blog.image !== "")
+                    ? blog.image
+                    : null,
+                title: blog.titles.find((title: any) => title.language === locale)?.title
+                    ?? blog.titles.find((title: any) => title.language === 'en')?.title
+                    ?? blog.titles
+                    ? blog.titles[0].title
+                    : "",
+                description: blog.description.find((desc: any) => desc.language === locale)?.description
+                    ?? blog.description.find((desc: any) => desc.language === 'en')?.description
+                    ?? blog.description[0]
+                    ? blog.description[0].description
+                    : "",
+                categories: blog.categories.map((category) => (
+                    {
+                        title: locale === "en" && category.name
+                            ? category.name
+                            : locale === "fr" && category.namefr
+                                ? category.namefr
+                                : locale === "ar" && category.namear
+                                    ? category.namear : category.name ?? category.namefr ?? category.namear ?? ""
+                    }
+                ))
+            }
+        )
+
+        )
+
+        return { status: 200, data: blogsFormatted, count };
     } catch (error) {
         console.error("An error occurred in getBlogs");
-        return { status: 500, data: { message: e("error") } };
+        return { status: 500, data: { message: e("error") }, count: 0 };
     }
 }
 

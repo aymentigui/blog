@@ -28,7 +28,6 @@ export default auth(async (req) => {
   if (isAuthRoutes) {
     if (isLogging) {
       const domainUrl = process.env.DOMAIN_URL;
-      console.log(domainUrl)
 
       if (!domainUrl) {
         console.log('DOMAIN_URL is not defined in the environment variables');

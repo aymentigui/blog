@@ -41,13 +41,13 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
                     <button className="lg:hidden p-2" onClick={toggleMenu} >
                         <X className="w-6 h-6 absolute top-8 right-8" />;
                     </button>
-                    <Link href="/" className="hover:underline">{header("home")}</Link>
+                    <Link href="/#" className="hover:underline">{header("home")}</Link>
                     <Link href="/blogs" className="hover:underline">{header("blogs")}</Link>
                     <Link href="/contact" className="hover:underline">{header("contactus")}</Link>
-                    <Link href="/#about" className="hover:underline">{header("aboutus")}</Link>
+                    <Link href="/about" className="hover:underline">{header("aboutus")}</Link>
                 </nav>
             </div>
-            <div className='flex gap-2'>
+            <div className='flex flex-wrap gap-2'>
                 <LanguageSwitcher />
                 <ModeToggle />
                 <UserRegisterLogin />

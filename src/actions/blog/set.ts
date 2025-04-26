@@ -71,6 +71,23 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
                 }
             }
         })
+
+        // await emailQueue.add('sendNewsletter', {
+        //     slog: slug,
+        //     title: titles[0].value +"--" + (titles[1]? titles[0].value:"") + "--" + (titles[2]? titles[0].value:""),
+        //     descriptions: descriptions[0].value +,
+        //   });
+
+        fetch ("/api/email", {
+            method: "POST",
+            body: JSON.stringify({
+                title: titles[0].value +"--" + (titles[1]? titles[0].value:"") + "--" + (titles[2]? titles[0].value:""),
+                description: descriptions[0].value,
+                categorie: JSON.stringify(categories),
+                slug: slug
+            }),
+        });
+
         return { status: 200, data: { message: s("createsuccess") } };
     } catch (error) {
         // @ts-ignore

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImageIcon, AlertCircle, CircleUserRound, LucideProps } from 'lucide-react'
 import { cn } from "@/lib/utils"
+import ImageComponent from 'next/image'
 
 interface BeautifulImageProps {
   src: string | null
