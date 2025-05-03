@@ -332,7 +332,7 @@ model project_content {
   id         String @id @default(uuid())
   project_id String
   type       String
-  data       String
+  data       Json
   language   String @default("en") // Langue du contenu, par défaut en anglais
   order      Int
 }
