@@ -9,6 +9,8 @@ import { deleteFileDb } from "../localstorage/delete-db";
 export async function UpdateBlog(id: string, titles: any[], descriptions: any[], components: any[], image: any, slug: any, categories: any[], deleteImage?: boolean): Promise<{ status: number, data: { message?: string } }> {
     const e = await getTranslations('Error');
     const s = await getTranslations('System');
+    const b = await getTranslations('Blogs');
+
     try {
         const session = await verifySession();
         if (!session?.data?.user) {
@@ -16,7 +18,12 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
         }
         const hasPermissionAdd = await withAuthorizationPermission(['blogs_update'], session.data.user.id);
 
-        if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
+        const blog = await prisma.blog.findUnique({ where: { id }});
+
+        if(!blog)
+            return { status: 404, data: { message: b("blognotfound") } };
+
+        if ((hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) && blog.created_by !== session.data.user.id) {
             return { status: 403, data: { message: e('forbidden') } };
         }
 
@@ -24,8 +31,20 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
             return { status: 400, data: { message: e("titlerequired") } };
         }
 
-        let contents = await UploadFilesContent(components, session.data.user.id)
-        if (!slug || !slug.length) slug = await generateSlug(titles[0].value);
+        const titleExist = await prisma.blog_titles.findFirst(
+            {
+                where: {
+                    title: {
+                        equals:titles[0].value,
+                    }
+                }
+        })
+
+        if (titleExist && titleExist.blog_id !== blog.id) {
+            return { status: 400, data: { message: e("titleexists") } };
+        }
+
+        if ((!slug || !slug.length) && !blog.slug ) slug = await generateSlug(titles[0].value);
 
         const imageBlog = await prisma.blog.findUnique({ where: { id }, select: { image: true } });
         let url = "";
@@ -45,24 +64,17 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
             where: { id },
             data: {
                 image: url,
-                slug: slug,
+                slug: (!slug || !slug.length)? blog.slug: slug,
                 titles: {
                     deleteMany: {},
                     create: titles.map((title: any) => ({
-                        title: title.value,
+                        title: title.value.trim().toLowerCase(),
                         language: title.language || "en",
-                    })),
-                },
-                description: {
-                    deleteMany: {},
-                    create: descriptions.map((description: any) => ({
-                        description: description.value,
-                        language: description.language || "en",
                     })),
                 },
                 contents: {
                     deleteMany: {},
-                    create: contents.map((content: any, index) => ({
+                    create: components.map((content: any, index) => ({
                         type: content.type,
                         data: JSON.stringify(content.value),
                         language: content.langage || "en",
@@ -77,6 +89,23 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
                 },
             }
         });
+
+
+        if (descriptions && descriptions.length > 0) {
+            await Promise.all(
+                descriptions.map(async (description: any) => {
+                    await prisma.blog_description.create({
+                        data: {
+                            description: description && description.value ? description.value : "",
+                            language: description.language || "en",
+                            blog_id: blog.id
+                        }
+                    })
+                })
+
+            )
+        }
+
         return { status: 200, data: { message: s("updatesuccess") } };
     } catch (error) {
         // @ts-ignore
@@ -85,32 +114,6 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
     }
 }
 
-const UploadFilesContent = async (components: any[], userId: string) => {
-
-    const Contents = components.map(async (component) => {
-
-        if ((component.type === 'image' || component.type === 'video' || component.type === 'file') && component.value) {
-            if (component.value.url) return component
-            const file = await uploadFileDB(component.value.file, userId)
-            if (file.status === 200 && file.data.file) {
-                return {
-                    ...component, value: {
-                        ...component.value,
-                        file: null,
-                        url: file.data.file.id
-                    }
-                }
-            }
-        }
-
-        else {
-            return component
-        }
-    })
-
-    const contetns = await Promise.all(Contents);
-    return contetns
-}
 
 const generateSlug = async (title: string) => {
     const slug = title.toLowerCase().replace(/ /g, '-');

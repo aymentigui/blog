@@ -124,8 +124,8 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    fetchBlogs(setBlogs,setIsLoading,1,3,undefined,"",[],"popular")
-    fetchCategories(setCategories,setIsLoadingC)
+    fetchBlogs(setBlogs, setIsLoading, 1, 3, undefined, "", [], "popular")
+    fetchCategories(setCategories, setIsLoadingC)
   }, [])
 
 
@@ -151,16 +151,18 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            >
-              {translate("browserarticles")}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button size="lg" variant="outline">
+            <Link href={"/blogs"}>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                {translate("browserarticles")}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            {/* <Button size="lg" variant="outline">
               {translate("browsercomponents")}
-            </Button>
+            </Button> */}
           </div>
 
           {/* <div className="max-w-md mx-auto">
@@ -190,7 +192,7 @@ export default function HomePage() {
           >
             <h2 className="text-3xl font-bold">{translate("articlesmostviewed")}</h2>
             <Link
-              href="/blog"
+              href="/blogs"
               className="text-purple-600 dark:text-purple-400 theme-ocean:text-purple-400 hover:underline flex items-center mt-4 md:mt-0"
             >
               {translate("allarticles")}
@@ -221,36 +223,36 @@ export default function HomePage() {
       {/* Categories */}
       {
         isLoadingC
-        ?
-        <section className="py-16 bg-gray-50 flex justify-center items-center dark:bg-gray-900 theme-ocean:bg-gray-900">
-          <Loading />
-        </section>
-        :
-        categories.length > 0 &&
-        <section className="py-16 bg-gray-50 dark:bg-gray-900 theme-ocean:bg-gray-900">
-          <div className="container px-4 mx-auto">
-            <motion.h2
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-3xl font-bold text-center mb-12"
-            >
-              {translate("browsercategories")}
-            </motion.h2>
+          ?
+          <section className="py-16 bg-gray-50 flex justify-center items-center dark:bg-gray-900 theme-ocean:bg-gray-900">
+            <Loading />
+          </section>
+          :
+          categories.length > 0 &&
+          <section className="py-16 bg-gray-50 dark:bg-gray-900 theme-ocean:bg-gray-900">
+            <div className="container px-4 mx-auto">
+              <motion.h2
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-3xl font-bold text-center mb-12"
+              >
+                {translate("browsercategories")}
+              </motion.h2>
 
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={staggerContainer}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            >
-              {categories.map((category, index): any => (
-                <CardCategoryAnimate key={index} index={index} title={category.title} />
-              ))}
-            </motion.div>
-          </div>
-        </section>
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              >
+                {categories.map((category, index): any => (
+                  <CardCategoryAnimate key={index} index={index} title={category.title} />
+                ))}
+              </motion.div>
+            </div>
+          </section>
       }
 
       {/* Recent Content Tabs */}
@@ -381,7 +383,7 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter */}
-      <FooterPublic/>
+      <FooterPublic />
     </div>
   )
 }

@@ -30,13 +30,25 @@ export async function uploadFileDB(
             return { status: 400, data: { message: e('badrequest') } }
         }
 
-        const filename = generateRandomFilename()
 
         if (file.size > 10000000) {
             return { status: 400, data: { message: f('filesizemax') + "10 mo" } }
         }
 
-        const fileUploaded = await uploadFile("uploads/" + filename + "." + getFileExtension(file.name), file)
+        let fileName=file.name.split(".")[0]
+        let filenameExists = await prisma.files.findFirst({
+            where: { name: fileName },
+        })
+        if (filenameExists) {
+            while (filenameExists) {
+                fileName = file.name.split(".")[0] + " (" + generateRandomFilename() + ")"
+                filenameExists = await prisma.files.findFirst({
+                    where: { name: fileName },
+                })
+            }
+        }
+
+        const fileUploaded = await uploadFile("uploads/" + file.name, file)
         if (fileUploaded.status !== 200 || !fileUploaded.data?.path) {
             if (fileUploaded.status === 409) {
                 return { status: 409, data: { message: f("fileexists") } };
@@ -46,7 +58,7 @@ export async function uploadFileDB(
 
         const fileCreated = await prisma.files.create({
             data: {
-                name: filename,
+                name: fileName,
                 mimeType: file.type,
                 size: file.size,
                 extention: getFileExtension(file.name),
@@ -60,7 +72,7 @@ export async function uploadFileDB(
                 adminDownloadOnly:adminDownloadOnly??false,
                 adminViewOnly: adminViewOnly??false,
 
-                canDeletePermissions: canDeletePermissions ? canDeletePermissions.join(",") : null,
+                canDeletePermissions: canDeletePermissions ? canDeletePermissions.join(",") : "files_delete",
                 canDownloadPermissions: canDownloadPermissions ? canDownloadPermissions.join(",") : null,
                 canViewPermissions: canViewPermissions ? canViewPermissions.join(",") : null,
             },

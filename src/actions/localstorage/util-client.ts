@@ -52,24 +52,28 @@ export const deleteFileFromLocalHost = async (idFile: string, origin = "/api/fil
 // --------------------------------------------------------
 
 export const getFileBlobFromLocalHost = async (idFile: string, allFile = "false", origin = "/api/files/", type?: string) => {
-    const response = type === "image"
-        ? await fetch(origin + idFile)
-        : await fetch(origin + idFile + "?allFile=" + allFile);
-    if (!response.ok) {
-        console.log("Erreur lors du téléchargement de l'image");
-        return;
+    try {
+        const response = type === "image"
+            ? await fetch(origin + idFile)
+            : await fetch(origin + idFile + "?allFile=" + allFile);
+        if (!response.ok) {
+            console.log("Erreur lors du téléchargement de l'image");
+            return;
+        }
+        let metadata = null
+        if (response.headers.get("X-File-Metadata")) {
+            metadata = JSON.parse(response.headers.get("X-File-Metadata") || '{}')
+        }
+        if (!metadata) return
+        const blob = await response.blob();
+        return { blob, metadata };
+    }catch(erreur){
+        return null
     }
-    let metadata = null
-    if (response.headers.get("X-File-Metadata")) {
-        metadata = JSON.parse(response.headers.get("X-File-Metadata") || '{}')
-    }
-    if (!metadata) return
-    const blob = await response.blob();
-    return { blob, metadata };
 };
 
 export const getImageFromLocalHost = async (idFile: string, origin = "/api/files/",) => {
-    const blob = await getFileBlobFromLocalHost(idFile, "true", origin+"image/","image");
+    const blob = await getFileBlobFromLocalHost(idFile, "true", origin + "image/", "image");
     if (!blob) return "null";
     const url = URL.createObjectURL(blob.blob);
     return url ?? "null"
@@ -81,4 +85,5 @@ export const getFileFromLocalHost = async (idFile: string, origin = "/api/files/
     const file = new File([blob?.blob], blob.metadata.name ?? "file", { type: blob.metadata.mimeType });
     return file;
 };
+
 

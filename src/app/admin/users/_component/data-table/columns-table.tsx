@@ -9,9 +9,8 @@ import { useAddUpdateUserDialog } from "@/context/add-update-dialog-context";
 import { useSession } from "@/hooks/use-session";
 import axios from "axios";
 import { useOrigin } from "@/hooks/use-origin";
-import GetImage from "@/hooks/use-getImage";
-import { LzyImage } from "@/components/myui/lazy-image";
 import { Checkbox } from "@/components/ui/checkbox";
+import MyImage from "@/components/myui/my-image";
 
 export type Columns = {
   id: string;
@@ -110,11 +109,11 @@ const rolesCell = (row: any) => {
 const imageCell = (row: any) => {
   const preview = row.getValue("imageCompressed")
   return preview ? (
-    <LzyImage
-      src={GetImage(preview)}
+    <MyImage
+      image={preview}
       alt="Avatar"
       load
-      className="w-4 h-4 object-cover rounded-full"
+      classNameProps="w-4 h-4 object-cover rounded-full"
     />
   ) : (
     <CircleUserRound  className="w-4 h-4 text-gray-500" />

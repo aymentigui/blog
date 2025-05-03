@@ -14,7 +14,7 @@ import Pagination from '@/components/myui/pagination'
 import { cn } from '@/lib/utils'
 
 const ListFilesWithPreview = (
-    { havetype, filesSelected, setFilesSelected, multiple=true }: { havetype?: string, filesSelected?: any[], setFilesSelected?: any, multiple?: boolean }
+    { havetype, filesSelected, setFilesSelected, multiple = true, notAllFile = false }: { havetype?: string, filesSelected?: any[], setFilesSelected?: any, multiple?: boolean, notAllFile?: boolean }
 ) => {
     const [files, setFiles] = useState<any[] | []>([])
     const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false)
@@ -41,14 +41,15 @@ const ListFilesWithPreview = (
         if (res.status === 200 && res2.status === 200) {
             setFiles(res.data.data)
             setCount(res2.data.data)
-            res.data.data.forEach((file: any) => {
-                if (file.size > 5242880) return
-                getFileFromLocalHost(file.id, origin + "/api/files/").then((val) => {
-                    if (val) {
-                        setFiles((p) => p.map((f: any) => f.id === file.id ? { ...f, file: val } : f))
-                    }
+            if (!notAllFile)
+                res.data.data.forEach((file: any) => {
+                    // if (file.size > 5242880) return
+                    getFileFromLocalHost(file.id, origin + "/api/files/").then((val) => {
+                        if (val) {
+                            setFiles((p) => p.map((f: any) => f.id === file.id ? { ...f, file: val } : f))
+                        }
+                    })
                 })
-            })
         }
     }
 
@@ -94,13 +95,13 @@ const ListFilesWithPreview = (
 
     const handleSelect = (file: any) => {
         if (filesSelected && setFilesSelected) {
-            if(multiple) {
+            if (multiple) {
                 if (filesSelected.find((f: any) => f.id === file.id)) {
                     setFilesSelected((p: any) => p.filter((f: any) => f.id !== file.id))
                 } else {
                     setFilesSelected((p: any) => [...p, file])
                 }
-            }else {
+            } else {
                 setFilesSelected([file])
             }
         }
@@ -182,18 +183,18 @@ const ListFilesWithPreview = (
                             }
                         </div>
                     ))}
-                    
+
                 </div>
             )}
-            
 
-             <div className='flex grow-[1] justify-end mx-2 my-4 items-end'>
-                    {pageSize !== 'all' && <Pagination
-                        currentPage={page}
-                        totalPages={count > 0 && typeof parseInt(pageSize) === 'number' ? Math.ceil(count / parseInt(pageSize)) : 0}
-                        onPageChange={(page) => setPage(page)}
-                    />}
-                </div>
+
+            <div className='flex grow-[1] justify-end mx-2 my-4 items-end'>
+                {pageSize !== 'all' && <Pagination
+                    currentPage={page}
+                    totalPages={count > 0 && typeof parseInt(pageSize) === 'number' ? Math.ceil(count / parseInt(pageSize)) : 0}
+                    onPageChange={(page) => setPage(page)}
+                />}
+            </div>
 
             {showConfirmDialog && (
                 <MyDialogConfirm

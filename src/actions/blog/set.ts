@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { withAuthorizationPermission, verifySession } from "../permissions";
 import { uploadFileDB } from "../localstorage/upload-db";
 
-export async function AddBlog(titles: any[], descriptions: any[], components: any[],image: any,slug:any,categories:any[]): Promise<{ status: number, data: { message?: string } }> {
+export async function AddBlog(titles: any[], descriptions: any[], components: any[], image: any, slug: any, categories: any[]): Promise<{ status: number, data: { message?: string } }> {
     const e = await getTranslations('Error');
     const s = await getTranslations('System');
     const translate = await getTranslations('Blogs');
@@ -23,43 +23,45 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
             return { status: 400, data: { message: translate("titlerequired") } };
         }
 
-        let contents = await UploadFilesContent(components, session.data.user.id)
-
         let url = "";
         if (image) {
             const res = await uploadFileDB(image, session.data.user.id)
-            if(res.status === 200) {
+            if (res.status === 200) {
                 url = res.data.file.id
             }
         }
 
-        if(!slug || slug === '') {
+        if (!slug || slug === '') {
+            const titleExist = await prisma.blog_titles.findFirst(
+                {
+                    where: {
+                       title: titles[0].value
+                    }
+                }
+            )
+            if (titleExist){
+                return { status: 400, data: { message: translate("titleexists") } };
+            }
             slug = await generateSlug(titles[0].value)
         }
 
-        await prisma.blog.create({
+
+        const blog = await prisma.blog.create({
             data: {
-                createdBy: session.data.user.id,
+                created_by: session.data.user.id,
                 image: url,
                 slug: slug,
                 titles: {
                     create: titles.map((title: any) => ({
-                        title: title.value,
+                        title: title.value.trim().toLowerCase() ?? "",
                         language: title.language || "en",
                     })
                     )
                 },
-                description: {
-                    create: descriptions.map((description: any) => ({
-                        description: description.value,
-                        language: description.language || "en",
-                    })
-                    )
-                },
                 contents: {
-                    create: contents.map((content: any, index) => ({
+                    create: components.map((content: any, index) => ({
                         type: content.type,
-                        data: JSON.stringify(content.value),
+                        data: JSON.stringify(content.value ?? ""),
                         language: content.langage || "en",
                         order: index
                     })),
@@ -71,6 +73,20 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
                 }
             }
         })
+        if (descriptions && descriptions.length > 0) {
+            await Promise.all(
+                descriptions.map(async (description: any) => {
+                    await prisma.blog_description.create({
+                        data: {
+                            description: description && description.value ? description.value : "",
+                            language: description.language || "en",
+                            blog_id: blog.id
+                        }
+                    })
+                })
+
+            )
+        }
 
         // await emailQueue.add('sendNewsletter', {
         //     slog: slug,
@@ -78,15 +94,15 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
         //     descriptions: descriptions[0].value +,
         //   });
 
-        fetch ("/api/email", {
-            method: "POST",
-            body: JSON.stringify({
-                title: titles[0].value +"--" + (titles[1]? titles[0].value:"") + "--" + (titles[2]? titles[0].value:""),
-                description: descriptions[0].value,
-                categorie: JSON.stringify(categories),
-                slug: slug
-            }),
-        });
+        // fetch("/api/email", {
+        //     method: "POST",
+        //     body: JSON.stringify({
+        //         title: titles[0].value + "--" + (titles[1] ? titles[0].value : "") + "--" + (titles[2] ? titles[0].value : ""),
+        //         description: descriptions[0].value,
+        //         categorie: JSON.stringify(categories),
+        //         slug: slug
+        //     }),
+        // });
 
         return { status: 200, data: { message: s("createsuccess") } };
     } catch (error) {
@@ -94,33 +110,6 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
         console.error("An error occurred in Addblog" + error.message);
         return { status: 500, data: { message: e("error") } };
     }
-}
-
-const UploadFilesContent = async (components: any[], userId: string) => {
-
-    const Contents = components.map(async (component) => {
-
-        if ((component.type === 'image' || component.type === 'video' || component.type === 'file') && component.value) {
-            const file = await uploadFileDB(component.value.file, userId)
-
-            if (file.status === 200 && file.data.file) {
-                return {
-                    ...component, value: {
-                        ...component.value,
-                        file: null,
-                        url: file.data.file.id
-                    }
-                }
-            }
-        }
-
-        else {
-            return component
-        }
-    })
-
-    const contetns = await Promise.all(Contents);
-    return contetns
 }
 
 const generateSlug = async (title: string) => {

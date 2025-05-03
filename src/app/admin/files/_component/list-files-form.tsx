@@ -12,7 +12,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import FileUploadForm from './forms/upload-files'
 
 const ListFilesForm = (
-    { havetype, filesSelected, setFilesSelected, multiple }: { havetype?: string, filesSelected: any[], setFilesSelected: any, multiple?: boolean }
+    { havetype, filesSelected, setFilesSelected, multiple, acceptedFileTypes, notAllFiles }: { havetype?: string, filesSelected: any[], setFilesSelected: any, multiple?: boolean, acceptedFileTypes?: Record<string, string[]>, notAllFiles?:boolean }
 ) => {
     const translate = useTranslations("Files")
     const translateSystem = useTranslations("System")
@@ -51,6 +51,7 @@ const ListFilesForm = (
                             />)
                             : (
                                 <FilePreview2
+                                    key={index}
                                     file={{ fileid: file.id, filename: file.name, filetype: file.mimeType }}
                                     size='w-28 h-36'
                                     onRemove={handleDelete}
@@ -70,14 +71,14 @@ const ListFilesForm = (
                         <TabsContent value="files" className=''>
                             <Card className='h-[63vh]  overflow-auto'>
                                 <CardContent className="space-y-2 h-full">
-                                    <ListFilesWithPreview havetype={havetype} filesSelected={filesSelected} setFilesSelected={setFilesSelected} multiple={multiple} />
+                                    <ListFilesWithPreview notAllFile={notAllFiles} havetype={havetype} filesSelected={filesSelected} setFilesSelected={setFilesSelected} multiple={multiple} />
                                 </CardContent>
                             </Card>
                         </TabsContent>
                         <TabsContent value="uploadfiles">
                             <Card className='h-[63vh]  overflow-auto'>
                                 <CardContent className="space-y-2 h-full">
-                                    <FileUploadForm showPermissions={false} />
+                                    <FileUploadForm acceptedFileTypes={acceptedFileTypes} showPermissions={false} />
                                 </CardContent>
                             </Card>
                         </TabsContent>

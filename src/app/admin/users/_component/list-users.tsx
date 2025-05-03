@@ -42,7 +42,6 @@ export default function UsersAdminPage() {
       if (!origin) return
       setIsLoading(true);
       const response = await axios(origin + "/api/admin/users", { params: { page, pageSize, search: debouncedSearchQuery } });
-      console.log(response)
       if (response.status === 200) {
         setData(response.data);
       }

@@ -25,17 +25,7 @@ export async function updateFilePermissionsDB(
 
     try {
 
-        console.log(
-            canViewUsers,
-            canDownloadUsers,
-            canDeleteUsers,
-            canViewPermissions,
-            canDownloadPermissions,
-            canDeletePermissions,
-            adminViewOnly,
-            adminDownloadOnly,
-            adminDeleteOnly
-        )
+
         await prisma.files.update({
             data: {
                 canViewUsers: adminViewOnly?null:canViewUsers ? canViewUsers.join(",") : null,
@@ -46,7 +36,7 @@ export async function updateFilePermissionsDB(
                 adminDownloadOnly:adminDownloadOnly??false,
                 adminViewOnly: adminViewOnly??false,
 
-                canDeletePermissions: adminDeleteOnly?null:canDeletePermissions ? canDeletePermissions.join(",") : null,
+                canDeletePermissions: adminDeleteOnly?null:canDeletePermissions ? canDeletePermissions.join(",") : "files_delete",
                 canDownloadPermissions: adminDownloadOnly?null:canDownloadPermissions ? canDownloadPermissions.join(",") : null,
                 canViewPermissions: adminViewOnly?null:canViewPermissions ? canViewPermissions.join(",") : null,
             },

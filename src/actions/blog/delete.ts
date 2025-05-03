@@ -17,17 +17,10 @@ export async function deleteBlogs(blogsIds: string[]): Promise<{ status: number,
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };
         }
-        await prisma.blog.deleteMany({
-            where: {
-                id: {
-                    in: blogsIds
-                }
-            }
-        });
         // suppression des titles
         await prisma.blog_titles.deleteMany({
             where: {
-                blogId: {
+                blog_id: {
                     in: blogsIds
                 }
             }
@@ -36,7 +29,7 @@ export async function deleteBlogs(blogsIds: string[]): Promise<{ status: number,
         // suppression des descriptions
         await prisma.blog_description.deleteMany({
             where: {
-                blogId: {
+                blog_id: {
                     in: blogsIds
                 }
             }
@@ -45,11 +38,36 @@ export async function deleteBlogs(blogsIds: string[]): Promise<{ status: number,
         // suppression des contents
         await prisma.blog_content.deleteMany({
             where: {
-                blogId: {
+                blog_id: {
                     in: blogsIds
                 }
             }
         })
+
+        await prisma.blogs_view.deleteMany({
+            where: {
+                blog_id: {
+                    in: blogsIds
+                }
+            }
+        })
+
+        await prisma.blog_favorites.deleteMany({
+            where: {
+                blog_id: {
+                    in: blogsIds
+                }
+            }
+        })
+
+        await prisma.blog.deleteMany({
+            where: {
+                id: {
+                    in: blogsIds
+                }
+            }
+        });
+
         return { status: 200, data: { message: s("deletesuccess") } };
     } catch (error) {
         console.error("An error occurred in deleteBlogs");

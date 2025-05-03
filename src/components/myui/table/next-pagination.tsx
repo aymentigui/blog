@@ -30,7 +30,7 @@ const NextPagination = ({ page, setPage, count, pageSize, isLoading, searchQuery
             variant="outline"
             size="sm"
             onClick={handleNextPage}
-            disabled={page === Math.ceil(count / pageSize) || isLoading}
+            disabled={page === Math.ceil(count / pageSize) || count ===0 || isLoading}
         >
             {s("next")}
         </Button>

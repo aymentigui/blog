@@ -1,7 +1,7 @@
 import React from 'react'
-import VideoUploader from './elements/video-builder'
-import FileBuilder from './elements/file-builder'
-import ImageBuilder from './elements/image-builder';
+import VideoUploader from './elements/video-element'
+import FileBuilder from './elements/file-elements'
+import ImageBuilder from './elements/image-element';
 import { useTranslations } from 'next-intl';
 import ParagraphBuilder from './elements/paragraph-element';
 import { TitleBuilder } from './elements/title-element';
@@ -9,6 +9,10 @@ import { SpaceBuilder } from './elements/space-element';
 import TextBuilder from './elements/text-element';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, Trash2 } from 'lucide-react';
+import CodeBuilder from './elements/code-element';
+import FilesBuilder from './elements/files-elements';
+import ImagesBuilder from './elements/images-element';
+import LinkBuilder from './elements/link-element';
 
 const ElementBuilder = ({ id, type, value, removeComponent, setBlur, handleChangeValue }: any) => {
 
@@ -18,7 +22,11 @@ const ElementBuilder = ({ id, type, value, removeComponent, setBlur, handleChang
             {type === 'image' && <ImageBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'video' && <VideoUploader value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'file' && <FileBuilder  value={value} onChangeValue={(val: any) => handleChangeValue(id, val)}/>}
+            {type === 'files' && <FilesBuilder  value={value} onChangeValue={(val: any) => handleChangeValue(id, val)}/>}
+            {type === 'images' && <ImagesBuilder  value={value} onChangeValue={(val: any) => handleChangeValue(id, val)}/>}
             {type === 'title' && <TitleBuilder size="titlebig" value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
+            {type === 'code' && <CodeBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
+            {type === 'link' && <LinkBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'titleh2' && <TitleBuilder size="titlemedium" value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'titleh3' && <TitleBuilder size="titlesmall" value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'paragraph' && <ParagraphBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}

@@ -1,4 +1,5 @@
 "use client"
+import { useTranslations } from "next-intl"
 import CommentItem from "./comment-item"
 
 interface CommentListProps {
@@ -8,10 +9,12 @@ interface CommentListProps {
 }
 
 export default function CommentList({ comments, blogId, isReplies = false }: CommentListProps) {
+  const translate= useTranslations("Blogs")
+
   if (!comments.length && !isReplies) {
     return (
       <div className="py-6 text-center text-muted-foreground">
-        <p>Be the first to comment!</p>
+        <p>{translate("befirsttocomment")}</p>
       </div>
     )
   }

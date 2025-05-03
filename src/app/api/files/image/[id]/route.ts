@@ -14,7 +14,7 @@ export async function GET(request: Request, { params }: { params: any }) {
     const fileexists = await prisma.files.findFirst({ where: { id: paramsID.id } });
 
     if (!fileexists) {
-        const filePath = path.join(process.cwd(), '/public/not_found.png');
+        const filePath = path.join(process.cwd(), '/public/not_found.jpg');
         const fileStream = fs.createReadStream(filePath);
 
         const readableStream = new ReadableStream({

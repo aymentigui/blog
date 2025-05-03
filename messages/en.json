@@ -255,6 +255,7 @@
         "deleteblog": "Delete Blog",
 
         "titlerequired": "Please enter a title",
+        "titleexists": "Title already exists",
         "contentrequired": "Please enter a content",
         "statusrequired": "Please choose a status",
         "selectcategories": "Please select categories",
@@ -263,6 +264,7 @@
         "draft": "Draft",
         "blognotfound": "Blog not found",
 
+        "slug": "Slug",
         "titleblog": "Title",
         "titleplaceholder": "Title...",
 
@@ -300,15 +302,22 @@
         "paragraphplaceholder": "Paragraph...",
 
         "image": "Image",
+        "images": "Images",
         "imageplaceholder": "Select an image...",
 
         "video": "Video",
         "videoplaceholder": "Video...",
 
+        "link": "Link",
+        "linkplaceholder": "Link...",
+        "linktextplaceholder": "Link text...",
+        "code": "Code",
+        "codeplaceholder": "Code...",
         "text": "Text",
         "textplaceholder": "Text...",
 
         "file": "File",
+        "files": "Files",
         "fileplaceholder": "File...",
 
         "width" : "Width (0 to 100%)",
@@ -342,7 +351,10 @@
         "commentdeletesuccess" : "Comment deleted successfully",
         "commentdeletefail" : "Failed to delete comment",
         "commmentpostsuccess" : "Comment posted successfully",
-        "commmentpostfail" : "Failed to post comment"
+        "commmentpostfail" : "Failed to post comment",
+        "views": "Views",
+        "myblogs" : "My Blogs",
+        "author": "Author"
     },
     "BlogsCategories":{
         "title": "Blogs Categories",
@@ -370,8 +382,8 @@
         "home": "Home",
         "blogs": "Blogs",
         "settings": "Settings",
-        "aboutus": "About Us",
-        "contactus": "Contact Us",
+        "aboutus": "About me",
+        "contactus": "Contact me",
         "logout": "Logout",
         "login": "Login",
         "register": "Register",
@@ -466,6 +478,19 @@
         "categories": "categories",
         "in": "in",
         "containing": "containing",
-        "clearfilters": "Clear filters"
+        "clearfilters": "Clear filters",
+        "noresult":"No results found.",
+        "noresultsearch":"No articles match your search criteria. Try different terms or filters.",
+        "resetfilters":"Reset filters",
+        "share": "Share",
+        "facebook": "Facebook",
+        "instagram":"Instagram",
+        "twitter": "Twitter",
+        "linkedin": "LinkedIn",
+        "copylink": "Copy link",
+        "copylinksuccess":"Link copied to clipboard",
+        "copylinkerror":"Unable to copy link",
+        "copylinkinstagramerror":"Instagram doesn't have a direct sharing API, usually redirects to app. Please copy the link and share manually.",
+        "likethisarticle":"You liked this article? Share it!"
     }
 }

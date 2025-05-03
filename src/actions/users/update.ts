@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { withAuthorizationPermission, verifySession} from "../permissions";
+import { withAuthorizationPermission, verifySession } from "../permissions";
 import { compressImage } from "../util/util";
 import { uploadFileDB } from "../localstorage/upload-db";
 import { deleteFileDb } from "../localstorage/delete-db";
@@ -19,7 +19,7 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
         if (!session || session.status != 200) {
             return { status: 401, data: { message: e('unauthorized') } }
         }
-        const hasPermissionAdd = await withAuthorizationPermission( ['users_update']);
+        const hasPermissionAdd = await withAuthorizationPermission(['users_update']);
 
         if (hasPermissionAdd.status != 200 || !hasPermissionAdd.data.hasPermission) {
             return { status: 403, data: { message: e('forbidden') } };
@@ -50,7 +50,6 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
 
         const result = userSchema.safeParse(data);
         if (!result.success) {
-            console.log(result.error.errors);
             return { status: 400, data: { errors: result.error.errors } };
         }
 
@@ -131,6 +130,29 @@ export async function updateUser(id: string, data: any): Promise<{ status: numbe
                     imageCompressed: imageCompressedUrl,
                 },
             })
+        } else {
+            if (user.image) {
+                await prisma.user.update(
+                    {
+                        where: { id: user.id },
+                        data: {
+                            image: null
+                        }
+                    }
+                )
+                await deleteFileDb(user.image)
+            }
+            if (user.imageCompressed) {
+                await prisma.user.update(
+                    {
+                        where: { id: user.id },
+                        data: {
+                            imageCompressed: null
+                        }
+                    }
+                )
+                await deleteFileDb(user.imageCompressed)
+            }
         }
 
         return { status: 200, data: { message: s("updatesuccess") } }

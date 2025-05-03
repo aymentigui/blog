@@ -15,12 +15,16 @@ import { logoutUser } from '@/actions/auth/auth'
 
 export function UserRegisterLogin() {
   const translate = useTranslations("System")
+  const translateMenu = useTranslations("Menu")
   const { session, setSession } = useSession()
 
   const router = useRouter()
 
-  const handleThemeChange = (theme: string) => {
-  }
+  useEffect(() => {
+    if(session.data && !session.data.user){
+      window.location.reload()
+    }
+  }, [session])
 
   const logout = async () => {
     const response = await logoutUser();
@@ -32,20 +36,20 @@ export function UserRegisterLogin() {
 
   return (
     <>
-      {!session|| !session.data || !session.data.user|| !session.data.user.id ?
-        <Button onClick={()=> router.push("/auth/login")} className="w-auto flex px-3 " variant="outline" size="icon">
+      {!session || !session.data || !session.data.user || !session.data.user.id ?
+        <Button onClick={() => router.push("/auth/login")} className="w-auto flex px-3 " variant="outline" size="icon">
           <span className=" h-[1.2rem] transition-all rotate-0 scale-100">{translate("registerorlogin")}</span>
         </Button>
         :
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="w-auto flex px-3 " variant="outline" size="icon">
-              <span className=" h-[1.2rem] transition-all rotate-0 scale-100">{session.data.user.username??session.data.user.firstname + " "+ session.data.user.lastname}</span>
+              <span className=" h-[1.2rem] transition-all rotate-0 scale-100">{session.data.user.username ?? session.data.user.firstname + " " + session.data.user.lastname}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => router.push("/admin")}>
-              {translate("dashboard")}
+            <DropdownMenuItem onClick={() => router.push("/admin/reactions")}>
+              {translateMenu("blogsreaction")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
               {translate("settings")}

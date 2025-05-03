@@ -69,7 +69,7 @@ export default function CommentForm({
             />
             <div className="flex justify-end">
                 <Button type="submit" disabled={isSubmitting || !content.trim()}>
-                    {isSubmitting ? translateSystem("translateSystem")+"..." : parentId ? translate("reply") : translate("postcomment")}
+                    {isSubmitting ? translateSystem("loading")+"..." : parentId ? translate("reply") : translate("postcomment")}
                 </Button>
             </div>
         </form>

@@ -1,18 +1,12 @@
 "use client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card} from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import PreviewBuilder, { PreviewBuilderHtml } from '@/components/myui/elements-builder/preview-builder';
 import ElementBuilder from '@/components/myui/elements-builder/element-builder';
-import AddElement from '@/components/myui/elements-builder/elements-add';
-import { Textarea } from '@/components/ui/textarea';
-import { AddBlog } from '@/actions/blog/set';
 import {
-    DndContext,
-    closestCenter,
     KeyboardSensor,
     PointerSensor,
     useSensor,
@@ -61,10 +55,15 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
     const [descriptionAr, setDescriptionAr] = useState("");
 
     const translate = useTranslations("Blogs")
+    const translateSystem = useTranslations("System")
 
     useEffect(() => {
         fetchdata()
     }, [origin])
+
+    useEffect(() => {
+
+    }, [])
 
     const fetchdata = async () => {
         if (!origin) return
@@ -130,14 +129,55 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
 
         const contentsString = components.map((component: any) => {
             if (component.type === "image" || component.type === "video" || component.type === "file") {
-                return {
-                    ...component,
-                    value: {
-                        ...component.value,
-                        file: (component.value.file && component.value.file.name) ?? null
+                if (component.value.file) {
+                    return {
+                        ...component,
+                        value: {
+                            ...component.value,
+                            url: component.value.file.id,
+                            filename: component.value.file.name,
+                            size: component.value.file.size,
+                            type: component.value.file.type,
+                            mimeType: component.value.file.mimeType,
+                            file: null
+                        }
+                    }
+                } else {
+                    return {
+                        ...component,
+                        value: {
+                            ...component.value,
+                            url: component.value.url
+                        }
                     }
                 }
-            } else {
+            } else if (component.type === "files" || component.type === "images") {
+                if (component.value.files) {
+                    return {
+                        ...component,
+                        value: {
+                            ...component.value,
+                            urls: component.value.files.map((f: any) => ({
+                                url: f.id,
+                                filename: f.name,
+                                size: f.size,
+                                type: f.type,
+                                mimeType: f.mimeType
+                            })),
+                            files: null
+                        }
+                    }
+                } else {
+                    return {
+                        ...component,
+                        value: {
+                            ...component.value,
+                            urls: component.value.urls
+                        }
+                    }
+                }
+            }
+            else {
                 return component
             }
         })
@@ -152,13 +192,13 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
         if (isAdd) {
             const res = await axios.post(`${origin}/api/admin/blog`, formdata)
             if (res.data.status === 200 && res.data.data && res.data.data.message) {
-                toast.success(res.data.message)
+                toast.success(translateSystem("createsuccess"))
                 router.push("/admin/blogs")
             }
         } else {
             const res = await axios.put(`${origin}/api/admin/blog/${blog.id}`, formdata)
             if (res.data.status === 200 && res.data.data && res.data.data.message) {
-                toast.success(res.data.message)
+                toast.success(translateSystem("updatesuccess"))
                 router.push("/admin/blogs")
             }
         }
@@ -263,7 +303,7 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
     }
 
     const labelCategoryName = (category: any) => {
-        return category.name + (category.namefr?" (" + category.namefr + ")":"") + (category.namear?" (" + category.namear + ")":"");
+        return category.name + (category.namefr ? " (" + category.namefr + ")" : "") + (category.namear ? " (" + category.namear + ")" : "");
     }
 
     return (
@@ -294,7 +334,7 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
                     options={
                         categories?.map((category: any) => ({
                             value: category.id,
-                            label: category.name + (category.namefr?" (" + category.namefr + ")":"") + (category.namear?" (" + category.namear + ")":""),
+                            label: category.name + (category.namefr ? " (" + category.namefr + ")" : "") + (category.namear ? " (" + category.namear + ")" : ""),
                         }))
                     }
                     value={categoriesSelected?.map((category) => ({
@@ -343,7 +383,7 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: any) => {
                     </TabsContent>
                 </Tabs>
 
-                <Button onClick={handleSubmit} variant='primary' className='mt-4'>Add</Button>
+                <Button onClick={handleSubmit} variant='primary' className='mt-4'>{isAdd ? translate("addblog") : translate("updateblog")}</Button>
                 <div>
                     {htmlContent.length > 0 &&
                         htmlContent.map((comp: any) => (

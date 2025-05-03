@@ -54,7 +54,7 @@ const LoginForm = () => {
                     setTwoFactorConfermation(true)
                 } else {
                     router.push("/");
-                    setSession(res.data)
+                    setSession(res)
                 }
             } else {
                 toast.error(res.data.message);

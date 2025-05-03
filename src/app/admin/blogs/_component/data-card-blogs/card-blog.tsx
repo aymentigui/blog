@@ -1,15 +1,14 @@
 "use client"
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
-import React, { useEffect } from 'react'
-import ViewBlogButton from '../buttons/view-blog'
+import React from 'react'
 import UpdateBlogButton from '../buttons/update-blog'
 import { Eye, Trash2 } from 'lucide-react'
-import BlogImage from '@/components/myui/blog-image'
 import { useSession } from '@/hooks/use-session'
 import { usePathname } from 'next/navigation'
 import { useOrigin } from '@/hooks/use-origin'
 import Loading from '@/components/myui/loading'
+import MyImage from '@/components/myui/my-image'
 
 const CardBlog = ({ blog, showAction = true }: { blog: any , showAction?: boolean }) => {
     const { session } = useSession()
@@ -32,7 +31,7 @@ const CardBlog = ({ blog, showAction = true }: { blog: any , showAction?: boolea
                         <Trash2 size={16} />
                     </div>}
                 </div>
-                <BlogImage image={blog.image} />
+                <MyImage image={blog.image} />
                 <div className='flex flex-col p-2 gap-2'>
                     <div className='font-bold'>
                         {blog.title}

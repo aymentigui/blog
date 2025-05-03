@@ -33,6 +33,7 @@ const formSchema = z.object({
 interface FileUploadProps {
   acceptedFileTypes?: Record<string, string[]>
   multiple?: boolean
+  type?: string
 
   isJustMeViewProps?: boolean
   isJustMeDownloadProps?: boolean
@@ -52,6 +53,7 @@ interface FileUploadProps {
 export default function FileUploadForm({
   acceptedFileTypes,
   multiple = true ,
+  type,
 
   isJustMeViewProps = false,
   isJustMeDownloadProps = false,
@@ -69,6 +71,19 @@ export default function FileUploadForm({
   // acceptedFileTypes = {
   //   'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
   //   'video/*': ['.mp4', '.avi', '.mov', '.webm']
+  // }
+  // acceptedFileTypes = {
+  //   'image/*': [
+  //     '.png',
+  //     '.gif',
+  //     '.jpeg',
+  //     '.jpg',
+  //     '.webp',
+  //     '.bmp',
+  //     '.ico',
+  //     '.svg',
+  //     '.tiff',
+  //   ]
   // }
   const [uploading, setUploading] = useState(false)
   const f = useTranslations("Files")
@@ -150,7 +165,6 @@ export default function FileUploadForm({
           toast.success("File uploaded successfully")
           form.reset()
         } else {
-          console.log(res.data)
           res.data.forEach((file: any) => {
             file.status !== 200 && toast.error(file.data.message)
           })

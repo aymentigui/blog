@@ -20,7 +20,7 @@ export async function deleteComment(id: string) {
         // Find the comment first to check ownership and get blogId
         const comment = await prisma.comment.findUnique({
             where: { id },
-            select: { authorId: true, blogId: true },
+            select: { author_id: true, blog_id: true },
         })
 
         if (!comment) {
@@ -28,7 +28,7 @@ export async function deleteComment(id: string) {
         }
 
         // Check if user is the author of the comment or an admin
-        if (comment.authorId !== session.data.user.id && !session.data.user.isAdmin) {
+        if (comment.author_id !== session.data.user.id && !session.data.user.isAdmin) {
             return { status: 401, data: { message: e("unauthorized") } };
         }
 
@@ -36,11 +36,11 @@ export async function deleteComment(id: string) {
         const deletedComment = await prisma.comment.update({
             where: { id },
             data: {
-                deletedAt: new Date(),
+                deleted_at: new Date(),
             },
         })
 
-        revalidatePath(`/blog/${comment.blogId}`)
+        revalidatePath(`/blogs/${comment.blog_id}`)
         return { success: true, comment: deletedComment }
     } catch (error) {
         console.error("Error deleting comment:", error)
@@ -67,11 +67,11 @@ export async function deleteMultipleComments(ids: string[]) {
                 },
             },
             select: {
-                blogId: true,
+                blog_id: true,
             },
         })
 
-        const blogIds = [...new Set(comments.map((comment) => comment.blogId))]
+        const blogIds = [...new Set(comments.map((comment) => comment.blog_id))]
 
         // Soft delete all comments
         const deletedComments = await prisma.comment.updateMany({
@@ -81,13 +81,13 @@ export async function deleteMultipleComments(ids: string[]) {
                 },
             },
             data: {
-                deletedAt: new Date(),
+                deleted_at: new Date(),
             },
         })
 
         // Revalidate all affected blog paths
         blogIds.forEach((blogId) => {
-            revalidatePath(`/blog/${blogId}`)
+            revalidatePath(`/blogs/${blogId}`)
         })
 
         return { success: true, count: deletedComments.count }
@@ -112,7 +112,7 @@ export async function hardDeleteComment(id: string) {
         // Find the comment first to get blogId
         const comment = await prisma.comment.findUnique({
             where: { id },
-            select: { blogId: true },
+            select: { blog_id: true },
         })
 
         if (!comment) {
@@ -122,7 +122,7 @@ export async function hardDeleteComment(id: string) {
         // Delete all reactions to this comment first
         await prisma.comment_reaction.deleteMany({
             where: {
-                commentId: id,
+                comment_id: id,
             },
         })
 
@@ -131,7 +131,7 @@ export async function hardDeleteComment(id: string) {
             where: { id },
         })
 
-        revalidatePath(`/blog/${comment.blogId}`)
+        revalidatePath(`/blogs/${comment.blog_id}`)
         return { success: true }
     } catch (error) {
         console.error("Error hard deleting comment:", error)

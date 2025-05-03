@@ -17,7 +17,7 @@ const BlogPreview = async ({ params }: any) => {
     return (
         <Card className='p-4 flex flex-col gap-2'>
             {/* <div className='h-72 overflow-hidden'>
-                <BlogImage image={res.data.image} />
+                <MyImage image={res.data.image} />
             </div>
             <div>
                 <h1 className='text-2xl font-bold'>{res.data.titles[0].title}</h1>

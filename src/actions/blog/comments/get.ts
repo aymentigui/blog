@@ -11,9 +11,9 @@ export async function getCommentsByBlog(blogId: string) {
         // First get all top-level comments (no parent)
         const comments = await prisma.comment.findMany({
             where: {
-                blogId,
-                parentId: null,
-                deletedAt: null, // Exclude soft-deleted comments
+                blog_id:blogId,
+                parent_id: null,
+                deleted_at: null, // Exclude soft-deleted comments
             },
             include: {
                 author: {
@@ -40,7 +40,7 @@ export async function getCommentsByBlog(blogId: string) {
                 },
             },
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         })
 
@@ -57,8 +57,8 @@ export async function getCommentReplies(commentId: string) {
     try {
         const replies = await prisma.comment.findMany({
             where: {
-                parentId: commentId,
-                deletedAt: null,
+                parent_id: commentId,
+                deleted_at: null,
             },
             include: {
                 author: {
@@ -85,7 +85,7 @@ export async function getCommentReplies(commentId: string) {
                 },
             },
             orderBy: {
-                createdAt: "asc",
+                created_at: "asc",
             },
         })
 
@@ -102,8 +102,8 @@ export async function getCommentsByUser(userId: string) {
     try {
         const comments = await prisma.comment.findMany({
             where: {
-                authorId: userId,
-                deletedAt: null,
+                author_id: userId,
+                deleted_at: null,
             },
             include: {
                 blog: {
@@ -121,7 +121,7 @@ export async function getCommentsByUser(userId: string) {
                 },
             },
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         })
 
@@ -139,7 +139,7 @@ export async function getReactionsByBlog(blogId: string) {
         const reactions = await prisma.comment_reaction.findMany({
             where: {
                 comment: {
-                    blogId,
+                    blog_id:blogId,
                 },
             },
             include: {
@@ -158,7 +158,7 @@ export async function getReactionsByBlog(blogId: string) {
                 },
             },
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         })
 
@@ -175,7 +175,7 @@ export async function getReactionsByUser(userId: string) {
     try {
         const reactions = await prisma.comment_reaction.findMany({
             where: {
-                userId,
+                user_id:userId,
             },
             include: {
                 comment: {
@@ -192,7 +192,7 @@ export async function getReactionsByUser(userId: string) {
                 },
             },
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         })
 
@@ -209,7 +209,7 @@ export async function getReactionsByComment(commentId: string) {
     try {
         const reactions = await prisma.comment_reaction.findMany({
             where: {
-                commentId,
+                comment_id:commentId,
             },
             include: {
                 user: {
@@ -221,7 +221,7 @@ export async function getReactionsByComment(commentId: string) {
                 },
             },
             orderBy: {
-                createdAt: "desc",
+                created_at: "desc",
             },
         })
 

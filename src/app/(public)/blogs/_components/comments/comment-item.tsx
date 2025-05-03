@@ -19,6 +19,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useSession } from "@/hooks/use-session"
 import toast from "react-hot-toast"
 import { useLocale, useTranslations } from "next-intl"
+import MyImage from "@/components/myui/my-image"
 
 interface CommentItemProps {
     comment: any
@@ -55,25 +56,23 @@ export default function CommentItem({ comment, blogId }: CommentItemProps) {
     })
 
     const toggleReplies = async () => {
-        if (!showReplies && !replies.length) {
-            setIsLoadingReplies(true)
-            try {
-                const result = await getCommentReplies(comment.id)
-                if (result.status === 200 && result.data) {
-                    // @ts-ignore
-                    setReplies(result.data || [])
-                }
-            } catch (error) {
-                console.error("Error loading replies:", error)
-            } finally {
-                setIsLoadingReplies(false)
+        setIsLoadingReplies(true)
+        try {
+            const result = await getCommentReplies(comment.id)
+            if (result.status === 200 && result.data) {
+                // @ts-ignore
+                setReplies(result.data || [])
             }
+        } catch (error) {
+            console.error("Error loading replies:", error)
+        } finally {
+            setIsLoadingReplies(false)
         }
-        setShowReplies(!showReplies)
+        setShowReplies(true)
     }
 
     const handleReaction = async (type: string) => {
-        if (!session?.user) {
+        if (!session.data?.user) {
             toast.error(translate("mustsignintoreact"))
             return
         }
@@ -84,30 +83,31 @@ export default function CommentItem({ comment, blogId }: CommentItemProps) {
                 type,
             })
 
+
             if (result.status !== 200) {
                 if (result.data?.message) {
                     toast.error(result.data?.message)
-                } else {
-                    // Optimistically update UI
-                    if (result.removed) {
-                        // Remove reaction
-                        comment.reactions = comment.reactions.filter((r: any) => !(r.user.id === session.user.id && r.type === type))
-                    } else if (result.reaction) {
-                        // Add or update reaction
-                        const existingIndex = comment.reactions.findIndex((r: any) => r.user.id === session.user.id)
+                }
+            } else {
+                // Optimistically update UI
+                if (result.removed) {
+                    // Remove reaction
+                    comment.reactions = comment.reactions.filter((r: any) => !(r.user.id === session.data.user.id && r.type === type))
+                } else if (result.reaction) {
+                    // Add or update reaction
+                    const existingIndex = comment.reactions.findIndex((r: any) => r.user.id === session.data.user.id)
 
-                        if (existingIndex >= 0) {
-                            comment.reactions[existingIndex].type = type
-                        } else {
-                            comment.reactions.push({
-                                id: result.reaction.id,
-                                type,
-                                user: {
-                                    id: session.user.id,
-                                    username: session.user.name,
-                                },
-                            })
-                        }
+                    if (existingIndex >= 0) {
+                        comment.reactions[existingIndex].type = type
+                    } else {
+                        comment.reactions.push({
+                            id: result.reaction.id,
+                            type,
+                            user: {
+                                id: session.data.user.id,
+                                username: session.data.user.name,
+                            },
+                        })
                     }
                 }
             }
@@ -148,14 +148,14 @@ export default function CommentItem({ comment, blogId }: CommentItemProps) {
             } else {
                 toast.success(translate("commentdeletesuccess"))
                 // Remove from UI
-                comment.deletedAt = new Date()
+                comment.deleted_at = new Date()
             }
         } catch (error) {
             toast.error(translate("commentdeletefail"))
         }
     }
 
-    if (comment.deletedAt) {
+    if (comment.deleted_at) {
         return (
             <Card className="bg-muted/50">
                 <CardContent className="p-4 text-muted-foreground italic">{translate("commentdeleted")}</CardContent>
@@ -164,20 +164,20 @@ export default function CommentItem({ comment, blogId }: CommentItemProps) {
     }
 
 
-    const isReply = !!comment.parentId
+    const isReply = !!comment.parent_id
 
     return (
         <Card>
             <CardHeader className="p-4 pb-2 flex flex-row items-start space-y-0">
                 <div className="flex items-start gap-2 flex-1">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={comment.author.image || ""} alt={comment.author.username || translateSystem("user")} />
-                        <AvatarFallback>{(comment.author.username || "U").charAt(0).toUpperCase()}</AvatarFallback>
+                        {comment.author.image && <MyImage image={comment.author.image || ""} alt={comment.author.username || translateSystem("user")} classNameProps="h-8 w-8" />}
+                        {!comment.author.image && <AvatarFallback>{(comment.author.username || "U").charAt(0).toUpperCase()}</AvatarFallback>}
                     </Avatar>
                     <div>
                         <p className="font-medium text-sm">{comment.author.username || translateSystem("anonymous")}</p>
                         <p className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: locale === "fr" ? fr : locale === "ar" ? arDZ : enUS })}
+                            {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: locale === "fr" ? fr : locale === "ar" ? arDZ : enUS })}
                         </p>
                     </div>
                 </div>
@@ -290,7 +290,7 @@ export default function CommentItem({ comment, blogId }: CommentItemProps) {
                         {comment._count.replies > 0 && (
                             <Button variant="ghost" size="sm" onClick={toggleReplies} className="h-8" disabled={isLoadingReplies}>
                                 <MessageSquare className="h-4 w-4 mr-1" />
-                                {comment._count.replies} {comment._count.replies === 1 ? translate("replycomment") : translate("replies") }
+                                {comment._count.replies} {comment._count.replies === 1 ? translate("replycomment") : translate("replies")}
                             </Button>
                         )}
                     </div>}

@@ -51,7 +51,7 @@ const SideBarBlog = () => {
                 >
                     <h2 className="text-3xl font-bold">{translate("articlesmostviewed")}</h2>
                     <Link
-                        href="/blog"
+                        href="/blogs"
                         className="text-purple-600 dark:text-purple-400 theme-ocean:text-purple-400 hover:underline flex items-center mt-4 md:mt-0"
                     >
                         {translate("allarticles")}

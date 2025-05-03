@@ -1,4 +1,4 @@
-import { accessPage, verifySession } from '@/actions/permissions';
+import { accessPage, verifySession, withAuthorizationPermission } from '@/actions/permissions';
 import { Card } from '@/components/ui/card';
 import React from 'react'
 import AddBlogForm from '../../_component/forms/add-blog';
@@ -17,10 +17,16 @@ const UpdateBlog = async ({ params }: { params: { id: string } }) => {
     if (session.status !== 200 || !session || !session.data.user || !session.data.user.id) {
         return null;
     }
-    await accessPage(['blogs_update'], session.data.user.id);
 
     const res= await getBlog(paramsID.id)
     if(res.status !== 200) return null
+    
+    
+    const hasPermissionUpdate = await withAuthorizationPermission(['blogs_update'], session.data.user.id);
+
+    if ((hasPermissionUpdate.status !== 200 || !hasPermissionUpdate.data.hasPermission) &&  res.data.createdBy !== session.data.user.id) {
+        return null;
+    }
 
     const resCategories = await getBlogsCategories()
     let categories = [];

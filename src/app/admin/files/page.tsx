@@ -11,38 +11,38 @@ import { getFileFromLocalHost } from '@/actions/localstorage/util-client'
 import { useOrigin } from '@/hooks/use-origin'
 
 const Files = () => {
-  // const { session } = useSession()
+  const { session } = useSession()
   const translate = useTranslations("Files")
-  // const [files, setFiles] = useState<any[] | []>([])
+  const [files, setFiles] = useState<any[] | []>([])
 
-  // const origin = useOrigin()
-  // const [pageSize, setPageSize] = useState("10")
-  // const [page, setPage] = useState(1)
-  // const [count, setCount] = useState(0)
-  // const [type, setType] = useState("")
+  const origin = useOrigin()
+  const [pageSize, setPageSize] = useState("10")
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(0)
+  const [type, setType] = useState("")
 
-  // useEffect(() => {
-  //   if (!session || !session.user || !session.user.id) return
-  //   fetchFile()
-  // }, [origin, session, pageSize, page, type])
+  useEffect(() => {
+    if (!session || !session.user || !session.user.id) return
+    fetchFile()
+  }, [origin, session, pageSize, page, type])
 
-  // const fetchFile = async () => {
-  //   if (!origin) return
-  //   const res = await axios(origin + "/api/files", { params: { page: page ?? 1, pageSize: pageSize ?? 10, type: type === "all" ? "" : type } })
-  //   const res2 = await axios(origin + "/api/files", { params: { type: type === "all" ? "" : type, count: true } })
-  //   if (res.status === 200 && res2.status === 200) {
-  //     setFiles(res.data.data)
-  //     setCount(res2.data.data)
-  //     res.data.data.forEach((file: any) => {
-  //       if (file.size > 5242880) return
-  //       getFileFromLocalHost(file.id, origin + "/api/files/").then((val) => {
-  //         if (val) {
-  //           setFiles((p) => p.map((f: any) => f.id === file.id ? { ...f, file: val } : f))
-  //         }
-  //       })
-  //     })
-  //   }
-  // }
+  const fetchFile = async () => {
+    if (!origin) return
+    const res = await axios(origin + "/api/files", { params: { page: page ?? 1, pageSize: pageSize ?? 10, type: type === "all" ? "" : type } })
+    const res2 = await axios(origin + "/api/files", { params: { type: type === "all" ? "" : type, count: true } })
+    if (res.status === 200 && res2.status === 200) {
+      setFiles(res.data.data)
+      setCount(res2.data.data)
+      res.data.data.forEach((file: any) => {
+        if (file.size > 5242880) return
+        getFileFromLocalHost(file.id, origin + "/api/files/").then((val) => {
+          if (val) {
+            setFiles((p) => p.map((f: any) => f.id === file.id ? { ...f, file: val } : f))
+          }
+        })
+      })
+    }
+  }
 
   return (
     <Card className='p-4'>
@@ -52,7 +52,7 @@ const Files = () => {
 
       </div>
       <ListFilesWithPreview/> 
-      {/* <ListFilesForm havetype='image' filesSelected={files} setFilesSelected={setFiles} /> */}
+      <ListFilesForm havetype='image' multiple={false} filesSelected={files} setFilesSelected={setFiles} />
     </Card>
   )
 }

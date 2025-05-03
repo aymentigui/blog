@@ -3,12 +3,10 @@ import React from 'react'
 import { motion } from "framer-motion"
 import Link from 'next/link'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Eye } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import GetImage from '@/hooks/use-getImage'
-import { LzyImage } from '@/components/myui/lazy-image'
+import MyImage from '@/components/myui/my-image'
 
 const CardBlogAnimate = ({ article }: any) => {
 
@@ -28,11 +26,11 @@ const CardBlogAnimate = ({ article }: any) => {
             <Link href={"/blogs/"+article.slug}>
                 <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow duration-300">
                     <div className="relative h-48 w-full">
-                        <LzyImage
+                        <MyImage
                             alt={article.title}
-                            src={GetImage(article.image)}
+                            image={article.image}
                             load
-                            className="w-full h-[150px] md:h-[200px] bg-accent"
+                            classNameProps="w-full h-[150px] md:h-[200px] bg-accent"
                             objet_fit='object-contain'
                         />
                         <div className="absolute top-4 left-4">
@@ -43,7 +41,7 @@ const CardBlogAnimate = ({ article }: any) => {
                     </div>
                     <CardContent className="pt-6">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 theme-ocean:text-gray-400 mb-2">
-                            <span>{new Date(article.createdAt).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\/|,|\:/g, ' ')}</span>
+                            <span>{new Date(article.created_at).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\/|,|\:/g, ' ')}</span>
                             <span className="mx-2">•</span>
                             <span className="flex gap-2 items-center">
                                 <Eye size={15} />

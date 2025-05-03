@@ -26,7 +26,7 @@ export async function updateComment({
     // Find the comment first to check ownership and get blogId
     const existingComment = await prisma.comment.findUnique({
       where: { id },
-      select: { authorId: true, blogId: true },
+      select: { author_id: true, blog_id: true },
     })
 
     if (!existingComment) {
@@ -34,7 +34,7 @@ export async function updateComment({
     }
 
     // Check if user is the author of the comment or an admin
-    if (existingComment.authorId !== session.data.user.id && !session.data.user.isAdmin) {
+    if (existingComment.author_id !== session.data.user.id && !session.data.user.isAdmin) {
       return { status: 401, data: { message: e("unauthorized") } };
     }
 
@@ -42,12 +42,12 @@ export async function updateComment({
       where: { id },
       data: {
         content,
-        updatedAt: new Date(),
+        updated_at: new Date(),
       },
     })
 
-    revalidatePath(`/blog/${existingComment.blogId}`)
-    return { success: true, comment: updatedComment }
+    revalidatePath(`/blogs/${existingComment.blog_id}`)
+    return { status: 200, data: { message: "" }, comment: updatedComment }
   } catch (error) {
     console.error("Error updating comment:", error)
     return { status: 500, data: { message: e("error") } };

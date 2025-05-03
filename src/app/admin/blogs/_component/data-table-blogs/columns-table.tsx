@@ -7,9 +7,8 @@ import { useSession } from "@/hooks/use-session";
 import { Eye, Settings2, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { LzyImage } from "@/components/myui/lazy-image";
-import GetImage from "@/hooks/use-getImage";
 import { deleteBlogs } from "@/actions/blog/delete";
+import MyImage from "@/components/myui/my-image";
 
 export type Columns = {
   id: string; // Supprimez l'`id`
@@ -28,19 +27,36 @@ const headerColumnDescription = () => {
   return translate("description")
 }
 
+const headerColumnView = () => {
+  const translate = useTranslations("Blogs")
+  return translate("views")
+}
+
+const headerColumnSlug = () => {
+  const translate = useTranslations("Blogs")
+  return translate("slug")
+}
+
 const headerColumnCategories = () => {
   const translate = useTranslations("Blogs")
   return translate("categories")
 }
 
+const headerColumnAuthor = () => {
+  const translate = useTranslations("Blogs")
+  return translate("author")
+}
+
+
 const imageCell = (row: any) => {
   const preview = row.getValue("image")
   return (
-    <LzyImage
-      src={preview?GetImage(preview):"/placeholder.png"}
+    <MyImage
+      image={preview?preview:"/placeholder.png"}
+      isNotApi= {!preview}
       alt="Avatar"
       load
-      className="w-10 h-10 object-cover rounded"
+      classNameProps="w-10 h-10 object-cover rounded"
     />
   ) 
 }
@@ -50,14 +66,14 @@ const actionsCell = (row: any) => {
   const { session } = useSession()
   const router = useRouter();
   const origin = useOrigin()
-  const hasPermissionDelete = (session?.user?.permissions.find((permission: string) => permission === "blogs_delete") ?? false) || session?.user?.isAdmin;
-  const hasPermissionUpdate = (session?.user?.permissions.find((permission: string) => permission === "blogs_update") ?? false) || session?.user?.isAdmin;
+  const hasPermissionDelete = (session?.user?.permissions.find((permission: string) => permission === "blogs_delete") ?? false) || session?.user?.isAdmin || session?.user?.id === data.createdBy;
+  const hasPermissionUpdate = (session?.user?.permissions.find((permission: string) => permission === "blogs_update") ?? false) || session?.user?.isAdmin || session?.user?.id === data.createdBy;
 
   return (
     <div className="flex gap-2">
       <Button
         onClick={() => {
-          window.open(`${origin}/blogs/${data.id}`, '_blank')
+          window.open(`${origin}/blogs/${data.slug}`, '_blank')
         }}
         variant="primary"
       >
@@ -129,11 +145,38 @@ export const columns: ColumnDef<Columns>[] = [
     ),
   },
   {
+    accessorKey: "slug",
+    header: headerColumnSlug,
+    cell: ({ row }) => (
+      <div >
+        {row.getValue("slug")}
+      </div>
+    ),
+  },
+  {
     accessorKey: "categories",
     header: headerColumnCategories,
     cell: ({ row }) => (
       <div className="w-4/6">
         {row.getValue("categories")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "user",
+    header: headerColumnAuthor,
+    cell: ({ row }) => (
+      <div >
+        {row.getValue("user")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "views",
+    header: headerColumnView,
+    cell: ({ row }) => (
+      <div >
+        {row.getValue("views")}
       </div>
     ),
   },

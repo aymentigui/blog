@@ -327,3 +327,23 @@ export async function getUserByEmailOrUsername(emailOrUsername: string): Promise
         return { status: 500, data: { message: e("error") } };
     }
 }
+
+
+export async function getUserName(id: string) {
+    const e = await getTranslations('Error');
+    try {
+        if (!id)
+            return ""
+
+        const user = await prisma.user.findFirst(
+            { where: { id } }
+        );
+        if (!user) {
+            return ""
+        }
+        return user.firstname + " " + user.lastname 
+    } catch (error) {
+        console.error("An error occurred in getUserByid");
+        return "" 
+    }
+}

@@ -28,9 +28,9 @@ export async function addComment({
         if (parentId) {
             const parentComment = await prisma.comment.findUnique({
                 where: { id: parentId },
-                select: { parentId: true },
+                select: { parent_id: true },
             })
-            if (parentComment && parentComment.parentId) {
+            if (parentComment && parentComment.parent_id) {
                 return { status: 400, data: { message:  b("errorreplaytoreplay")} }
             }
         }
@@ -38,14 +38,14 @@ export async function addComment({
         const comment = await prisma.comment.create({
             data: {
                 content,
-                blogId,
-                authorId: session.data.user.id,
-                parentId: parentId || null,
+                blog_id:blogId,
+                author_id: session.data.user.id,
+                parent_id: parentId || null,
             },
         })
 
-        revalidatePath(`/blog/${blogId}`)
-        return { success: true, comment }
+        revalidatePath(`/blogs/${blogId}`)
+        return { status: 200, data: { message: "" }, comment: comment }
     } catch (error) {
         console.error("Error adding comment:", error)
         return { status: 500, data: { message: e("error") } }
@@ -72,9 +72,9 @@ export async function addReaction({
         // Check if user already reacted to this comment
         const existingReaction = await prisma.comment_reaction.findUnique({
             where: {
-                userId_commentId: {
-                    userId: session.data.user.id,
-                    commentId,
+                user_id_comment_id: {
+                    user_id: session.data.user.id,
+                    comment_id:commentId,
                 },
             },
         })
@@ -90,7 +90,7 @@ export async function addReaction({
                         type,
                     },
                 })
-                return { success: true, reaction: updatedReaction }
+                return { status:200, reaction: updatedReaction }
             }
 
             // Remove reaction if same type (toggle behavior)
@@ -99,29 +99,29 @@ export async function addReaction({
                     id: existingReaction.id,
                 },
             })
-            return { success: true, removed: true }
+            return { status:200, removed: true }
         }
 
         // Create new reaction
         const reaction = await prisma.comment_reaction.create({
             data: {
                 type,
-                userId: session.data.user.id,
-                commentId,
+                user_id: session.data.user.id,
+                comment_id:commentId,
             },
         })
 
         // Get the blog ID to revalidate the path
         const comment = await prisma.comment.findUnique({
             where: { id: commentId },
-            select: { blogId: true },
+            select: { blog_id: true },
         })
 
-        if (comment?.blogId) {
-            revalidatePath(`/blog/${comment.blogId}`)
+        if (comment?.blog_id) {
+            revalidatePath(`/blogs/${comment.blog_id}`)
         }
 
-        return { success: true, reaction }
+        return { status: 200, data: { message: "" }, reaction }
     } catch (error) {
         console.error("Error adding reaction:", error)
         return { status: 500, data: { message: e("error") } }

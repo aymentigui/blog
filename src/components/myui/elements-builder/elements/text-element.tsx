@@ -26,12 +26,9 @@ const TextBuilder = ({ value, onChangeValue }: { value?: string, onChangeValue?:
                     ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
                     [{ list: "ordered" }, { list: "bullet" }],
                     [{ align: [] }],
-                    ["link", "image", "video"],
+                    ["link"],
                     ["clean"],
                 ],
-                imageResize: {
-                    modules: ["Resize", "DisplaySize"],
-                },
                 table: true,
                 tableWidget: {
                     toolbarOffset: -1,

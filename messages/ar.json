@@ -252,6 +252,7 @@
         "deleteblog": "حذف مدونة",
 
         "titlerequired": "الرجاء ادخال عنوان",
+        "titleexists": "العنوان موجود",
         "contentrequired": "الرجاء ادخال المحتوى",
         "statusrequired": "الرجاء اختيار حالة المدونة",
 
@@ -271,6 +272,7 @@
         "contentblogfr" : "المحتوى (FR)",
         "contentplaceholder": "محتوى...",
 
+        "slug": "الرابط",
         "titledescriptionen": "هذا هو عنوان المدونة باللغة الإنجليزية",
         "titledescriptionar": "هذا هو عنوان المدونة باللغة العربية",
         "titledescriptionfr": "هذا هو عنوان المدونة باللغة الفرنسية",
@@ -291,12 +293,19 @@
         "paragraph": "فقرة",
         "paragraphplaceholder": "فقرة...",
         "image": "صورة",
+        "images": "صور",
         "imageplaceholder": "اختر صورة...",
         "video": "فيديو",
         "videoplaceholder": "فيديو...",
         "text": "نص",
+        "link": "رابط",
+        "linkplaceholder": "رابط...",
+        "linktextplaceholder": "نص الرابط...",
+        "code": "كود",
+        "codeplaceholder": "كود...",
         "textplaceholder": "نص...",
         "file": "ملف",
+        "files": "ملفات",
         "fileplaceholder": "ملف...",
         "width" : "العرض (0 الى 100%)",
         "widthbetween" : "العرض يجب ان يكون بين 0 و 100",
@@ -329,7 +338,10 @@
         "commentdeletesuccess" : "تم حذف التعليق بنجاح",
         "commentdeletefail" : "فشل في حذف التعليق",
         "commmentpostsuccess" : "تم اضافة التعليق بنجاح",
-        "commmentpostfail" : "فشل في اضافة التعليق"
+        "commmentpostfail" : "فشل في اضافة التعليق",
+        "views": "المشاهدات",
+        "myblogs" : "مدوناتي",
+        "author": "المؤلف"
     },
     "BlogsCategories": {
         "title": "فئات المدونات",
@@ -357,8 +369,8 @@
         "home": "الصفحة الرئيسية",
         "blogs": "المدونات",
         "settings": "الإعدادات",
-        "aboutus": "عنا",
-        "contactus": "اتصل بنا",
+        "aboutus": "عني",
+        "contactus": "اتصل بي",
         "logout": "تسجيل الخروج",
         "login": "تسجيل الدخول",
         "register": "تسجيل",
@@ -453,6 +465,19 @@
         "categories": "الفئات",
         "in": "في",
         "containing":"يحتوي على",
-        "clearfilters":"مسح الفلاتر"
+        "clearfilters":"مسح الفلاتر",
+        "noresult":"لم يتم العثور على نتائج.",
+        "noresultsearch":"لم يتم العثور على مقالات تتطابق مع شروطك. جرب مصطلحات أو فلتر مختلفة.",
+        "resetfilters":"إعادة تعيين الفلاتر",
+        "share": "مشاركة",
+        "facebook": "فيسبوك",
+        "instagram":"انستاغرام",
+        "twitter": "تويتر",
+        "linkedin": "لينكدان",
+        "copylink": "نسخ الرابط",
+        "copylinksuccess":"تم نسخ الرابط",
+        "copylinkerror":"غير قادر على نسخ الرابط",
+        "copylinkinstagramerror":"انستاغرام لا يملك واجهة برمجية لمشاركة مباشرة، عادة ما يوجه إلى التطبيق. من فضلك، نسخ الرابط وشاركه يدويًا.",
+        "likethisarticle":"هل أعجبتك هذه المقالة؟ شاركها!"
     }
 }

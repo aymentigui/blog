@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { AlignVerticalSpaceAround, CaseSensitive, FileText, Image, Plus, Type, Video } from 'lucide-react';
+import { AlignVerticalSpaceAround, CaseSensitive, Code, Files, FileText, Image, Images, Link, Plus, Type, Video } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react'
 
@@ -17,9 +17,13 @@ const AddElement = ({ onAdd, langage }: any) => {
     { label: translate("paragraph"), langage: langage, type: 'paragraph', icon: <CaseSensitive size={18} /> },
     { label: translate("elementspaceplaceholder"), langage: langage, type: 'space', icon: <AlignVerticalSpaceAround size={18} /> },
     { label: translate("image"), langage: langage, type: 'image', icon: <Image size={18} /> },
+    { label: translate("images"), langage: langage, type: 'images', icon: <Images size={18} /> },
     { label: translate("video"), langage: langage, type: 'video', icon: <Video size={18} /> },
     { label: translate("text"), langage: langage, type: 'text', icon: <FileText size={18} /> },
+    { label: translate("code"), langage: langage, type: 'code', icon: <Code size={18} /> },
+    { label: translate("link"), langage: langage, type: 'link', icon: <Link size={18} /> },
     { label: translate("file"), langage: langage, type: 'file', icon: <FileText size={18} /> },
+    { label: translate("files"), langage: langage, type: 'files', icon: <Files size={18} /> },
   ];
 
   const [filteredOptions, setFilteredOptions] = useState(options);

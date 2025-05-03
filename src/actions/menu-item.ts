@@ -12,7 +12,7 @@ const itemsMenu = async () => {
             url: "/admin",
             icon: Home,
             admin: false,
-            permissions: [],
+            permissions: ["dashboard_view"],
         },
         {
             title: Menu("users"),
@@ -85,22 +85,6 @@ const itemsMenu = async () => {
                     icon: Download,
                     admin: false,
                     permissions: ["files_create"],
-                },
-            ],
-        },
-        {
-            title: Menu("more"),
-            url: null,
-            icon: CircleEllipsis,
-            admin: false,
-            permissions: [],
-            subItems: [
-                {
-                    title: Menu("fileslocalstorage"),
-                    url: "/admin/more/upload-files",
-                    icon: FileSpreadsheet,
-                    admin: false,
-                    permissions: [],
                 },
             ],
         },

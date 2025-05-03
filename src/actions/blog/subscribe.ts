@@ -12,7 +12,6 @@ export async function subscribe(email: string) {
 
     try {
         const result = schema.safeParse({ email });
-        console.log(email)
         if (!result.success) {
             return { status: 400, data: result.error.errors };
         }
