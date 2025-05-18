@@ -1,0 +1,365 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model user {
+  id                            String                     @id @default(cuid())
+  firstname                     String?
+  lastname                      String?
+  username                      String?                    @unique
+  email                         String?                    @unique
+  emailVerified                 DateTime?
+  password                      String
+  image                         String?
+  imageCompressed               String?
+  isTwoFactorEnabled            Boolean?                   @default(false)
+  twoFactorConfermationCode     twofactorconfermation?
+  resetPasswordConfermationCode resetpasswordconfermation?
+  // accounts                      Account[]
+  sessions                      session[]
+  roles                         userrole[]
+  isAdmin                       Boolean                    @default(false)
+  public                        Boolean                    @default(true)
+  // Optional for WebAuthn support
+  // Authenticator                 Authenticator[]
+
+  comments         comment[]
+  commentReactions comment_reaction[]
+  blog_favorites   blog_favorites[]
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deleted_at DateTime?
+}
+
+// model Account {
+//   id                       String  @id @default(cuid())
+//   userId                   String  @unique
+//   type                     String
+//   provider                 String
+//   providerAccountId        String
+//   refresh_token            String? @db.Text
+//   access_token             String? @db.Text
+//   expires_at               Int?
+//   token_type               String?
+//   scope                    String?
+//   id_token                 String? @db.Text
+//   session_state            String?
+//   refresh_token_expires_in Int?
+//   user                     User?   @relation(fields: [userId], references: [id])
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([provider, providerAccountId])
+//   @@index([userId])
+// }
+
+// Optional for WebAuthn support
+// model Authenticator {
+//   credentialID         String  @unique
+//   userId               String
+//   providerAccountId    String
+//   credentialPublicKey  String
+//   counter              Int
+//   credentialDeviceType String
+//   credentialBackedUp   Boolean
+//   transports           String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@id([userId, credentialID])
+// }
+
+//------------------------------- roles -------------------------------------------
+
+model role {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  permissions String
+  public      Boolean    @default(true)
+  users       userrole[]
+}
+
+model userrole {
+  id     String @id @default(cuid())
+  user   user   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  role   role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId String
+}
+
+//------------------------------- sessions -------------------------------------------
+
+model session {
+  id           String   @id @default(cuid())
+  sessionToken String
+  userId       String
+  expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceName   String?
+  deviceType   String?
+  browser      String?
+  os           String?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+//------------------------------- token -------------------------------------------
+
+model verificationtoken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String
+  expiredAt DateTime
+}
+
+model twofactorconfermation {
+  id        String   @id @default(cuid())
+  userId    String
+  expiredAt DateTime
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+model resetpasswordconfermation {
+  id        String   @id @default(cuid())
+  userId    String
+  expiredAt DateTime
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+}
+
+//------------------------------- files -------------------------------------------
+
+model files {
+  id        String    @id @default(cuid())
+  name      String
+  mimeType  String
+  extention String
+  size      Int
+  path      String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  addedFrom String?
+
+  canViewPermissions     String?
+  canDownloadPermissions String?
+  canDeletePermissions   String?
+
+  // Définition des permissions spécifiques aux utilisateurs
+  canViewUsers     String?
+  canDownloadUsers String?
+  canDeleteUsers   String?
+
+  // Indicateur si seul l'admin a le contrôle total
+  adminViewOnly     Boolean @default(false)
+  adminDownloadOnly Boolean @default(false)
+  adminDeleteOnly   Boolean @default(false)
+}
+
+//------------------------------- blogs -------------------------------------------
+
+model blog {
+  id             String             @id @default(uuid())
+  created_at     DateTime           @default(now())
+  updated_at     DateTime           @updatedAt
+  deleted_at     DateTime? // Pour mettre en corbeille
+  created_by     String // ID de l'utilisateur qui a créé le blog
+  image          String
+  slug           String             @unique
+  views          Int                @default(0) // Nombre de vues
+  contents       blog_content[]
+  titles         blog_titles[]
+  description    blog_description[]
+  categories     blogs_categories[] @relation("blogs_categories")
+  comments       comment[]
+  blogs_view     blogs_view[]
+  blog_favorites blog_favorites[]
+}
+
+model blog_titles {
+  id       String @id @default(uuid())
+  blog_id  String
+  blog     blog   @relation(fields: [blog_id], references: [id], onDelete: Cascade)
+  title    String
+  language String @default("en") // Langue du nom, par défaut en anglais
+}
+
+model blog_description {
+  id          String @id @default(uuid())
+  blog_id     String
+  blog        blog   @relation(fields: [blog_id], references: [id], onDelete: Cascade)
+  description String
+  language    String @default("en") // Langue du nom, par défaut en anglais
+}
+
+model blog_content {
+  id       String @id @default(uuid())
+  blog_id  String
+  blog     blog   @relation(fields: [blog_id], references: [id], onDelete: Cascade)
+  type     String
+  data     Json
+  language String @default("en") // Langue du contenu, par défaut en anglais
+  order    Int
+}
+
+model blogs_categories {
+  id     String @id @default(cuid())
+  name   String
+  namefr String
+  namear String
+
+  products blog[] @relation("blogs_categories")
+}
+
+model blogs_view {
+  id        Int      @id @default(autoincrement())
+  blog_id   String
+  viewed_at DateTime @default(now())
+
+  blog blog @relation(fields: [blog_id], references: [id])
+}
+
+model Subscriber {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  created_at DateTime @default(now())
+}
+
+model blog_favorites {
+  id        Int      @id @default(autoincrement())
+  user_id   String
+  blog_id   String
+  favorited DateTime @default(now())
+
+  user user @relation(fields: [user_id], references: [id])
+  blog blog @relation(fields: [blog_id], references: [id])
+}
+
+//------------------------------- comments -------------------------------------------
+
+// Comment model for blog posts
+model comment {
+  id         String    @id @default(uuid())
+  content    String
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+  updated_at DateTime? @updatedAt
+
+  // Relation to user (author of the comment)
+  author_id String
+  author    user   @relation(fields: [author_id], references: [id], onDelete: Cascade)
+
+  // Relation to blog post
+  blog_id String
+  blog    blog   @relation(fields: [blog_id], references: [id], onDelete: Cascade)
+
+  // Self-relation for nested comments
+  parent_id String?
+  parent    comment?  @relation("CommentReplies", fields: [parent_id], references: [id], onDelete: Cascade)
+  replies   comment[] @relation("CommentReplies")
+
+  // Relation to reactions
+  reactions comment_reaction[]
+}
+
+// Reaction model for comments
+model comment_reaction {
+  id         String   @id @default(uuid())
+  type       String // e.g., "like", "love", "angry", etc.
+  created_at DateTime @default(now())
+
+  // Relation to user (who reacted)
+  user_id String
+  user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  // Relation to comment
+  comment_id String
+  comment    comment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+
+  // Ensure a user can only react once per comment
+  @@unique([user_id, comment_id])
+}
+
+//------------------------------- projects -------------------------------------------
+
+model project {
+  id            String                @id @default(uuid())
+  created_at    DateTime              @default(now())
+  updated_at    DateTime              @updatedAt
+  deleted_at    DateTime? // Pour mettre en corbeille
+  created_by    String // ID de l'utilisateur qui a créé le blog
+  image         String
+  slug          String                @unique
+  views         Int                   @default(0) // Nombre de vues
+  titles        project_titles[]
+  project_views project_view[]
+  description   project_description[]
+  contents       project_content[]
+  categories    project_categories[]    @relation("projects_categories")
+}
+
+model project_titles {
+  id         String   @id @default(uuid())
+  project_id String
+  title      String
+  language   String   @default("en") // Langue du nom, par défaut en anglais
+  project    project? @relation(fields: [project_id], references: [id])
+}
+
+model project_description {
+  id          String   @id @default(uuid())
+  project_id  String
+  description String
+  language    String   @default("en") // Langue du nom, par défaut en anglais
+  project     project? @relation(fields: [project_id], references: [id])
+}
+
+model project_content {
+  id         String   @id @default(uuid())
+  project_id String
+  type       String
+  data       Json
+  language   String   @default("en") // Langue du contenu, par défaut en anglais
+  order      Int
+  project    project? @relation(fields: [project_id], references: [id])
+}
+
+model project_categories {
+  id     String @id @default(cuid())
+  name   String
+  namefr String
+  namear String
+
+  project project[] @relation("projects_categories")
+}
+
+model project_view {
+  id         Int      @id @default(autoincrement())
+  project_id String
+  viewed_at  DateTime @default(now())
+
+  project project @relation(fields: [project_id], references: [id])
+}
+
+
+model page_view {
+  id         Int      @id @default(autoincrement())
+  page String
+  viewed_at  DateTime @default(now())
+}
