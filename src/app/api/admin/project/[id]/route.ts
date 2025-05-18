@@ -6,7 +6,7 @@ export async function PUT(request: Request, { params }: { params: any }) {
     const paramsID = await params
 
     const data = await request.formData();
-    let images = data.get("file") as unknown as File[];
+    let images = data.get("file") as unknown as File;
     const slug = data.get("slug") as string;
     const titles = JSON.parse(data.get("titles") as string);
     const descriptions = JSON.parse(data.get("descriptions") as string);

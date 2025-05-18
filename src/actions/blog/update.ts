@@ -60,20 +60,31 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
             url = imageBlog.image
         }
 
+        await prisma.blog_titles.deleteMany({ where: { blog_id: id } });
+        await prisma.blog_description.deleteMany({ where: { blog_id: id } });
+        await prisma.blog_content.deleteMany({ where: { blog_id: id } });
+        await prisma.blogs_categories.deleteMany({ 
+            where: {
+                products : {
+                    some: {
+                        id
+                    }
+                }
+            }
+        });
+
         await prisma.blog.update({
             where: { id },
             data: {
                 image: url,
                 slug: (!slug || !slug.length)? blog.slug: slug,
                 titles: {
-                    deleteMany: {},
                     create: titles.map((title: any) => ({
                         title: title.value.trim().toLowerCase(),
                         language: title.language || "en",
                     })),
                 },
                 contents: {
-                    deleteMany: {},
                     create: components.map((content: any, index) => ({
                         type: content.type,
                         data: JSON.stringify(content.value),
@@ -82,7 +93,6 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
                     })),
                 },
                 categories: {
-                    deleteMany: {},
                     connect: categories.map((category: any) => ({
                         id: category,
                     })),

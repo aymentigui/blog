@@ -6,7 +6,7 @@ import { getBlog } from '@/actions/blog/get';
 import { getBlogsCategories } from '@/actions/blog/categories/get';
 
 
-const UpdateBlog = async (params : any) => {
+const UpdateBlog = async ({params} : any) => {
 
     const paramsID = await params
 

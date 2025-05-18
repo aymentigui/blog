@@ -60,20 +60,31 @@ export async function UpdateProject(id: string, titles: any[], descriptions: any
             url = imageProject.image
         }
 
+        await prisma.project_titles.deleteMany({ where: { project_id: id } });
+        await prisma.project_description.deleteMany({ where: { project_id: id } });
+        await prisma.project_content.deleteMany({ where: { project_id: id } });
+        await prisma.project_categories.deleteMany({ 
+            where: {
+                project : {
+                    some: {
+                        id
+                    }
+                }
+            }
+        });
+
         await prisma.project.update({
             where: { id },
             data: {
                 image: url,
                 slug: (!slug || !slug.length)? project.slug: slug,
                 titles: {
-                    deleteMany: {},
                     create: titles.map((title: any) => ({
                         title: title.value.trim().toLowerCase(),
                         language: title.language || "en",
                     })),
                 },
                 contents: {
-                    deleteMany: {},
                     create: components.map((content: any, index) => ({
                         type: content.type,
                         data: JSON.stringify(content.value),

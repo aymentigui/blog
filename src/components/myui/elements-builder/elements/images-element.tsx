@@ -60,7 +60,7 @@ const ImagesBuilder = ({ value, onChangeValue }: any) => {
 export const ImagesPreview = ({ value }: any) => {
     const [files, setFiles] = useState<string[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedImage, setSelectedImage] = useState<any>(null);
 
     useEffect(() => {
         setImage();
@@ -131,7 +131,7 @@ export const ImagesPreview = ({ value }: any) => {
                         ) : (
                             <MyImage
                                 alt="image fullscreen"
-                                image={selectedImage}
+                                image={selectedImage.url}
                                 classNameProps="object-contain w-full h-auto"
                             />
                         )

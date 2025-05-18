@@ -8,10 +8,11 @@ import SocialShare from "../_components/social-share"
 import { PreviewBuilderHtml } from "@/components/myui/elements-builder/preview-builder"
 
 // Server-side function to fetch project data
-export async function generateMetadata(params: any): Promise<Metadata> {
+export async function generateMetadata({ params }: any): Promise<Metadata> {
   const paramsID = await params
+  const decodedID = decodeURIComponent(paramsID.id)
   const local = await getLocale()
-  const res = await getProjectPublic(undefined, paramsID.id, local, true)
+  const res = await getProjectPublic(undefined, decodedID, local, true)
 
   if (res.status !== 200) return {} // If project not found, return empty metadata
 
@@ -20,7 +21,7 @@ export async function generateMetadata(params: any): Promise<Metadata> {
     .join(", ")
 
   const baseUrl = process.env.DOMAIN_URL || "http://localhost:3000"
-  const shareUrl = `${baseUrl}/projects/${paramsID.id}`
+  const shareUrl = `${baseUrl}/projects/${decodedID}`
 
   return {
     title: res.data.titles[0].title, // Dynamic Title
@@ -57,31 +58,28 @@ export async function generateMetadata(params: any): Promise<Metadata> {
 
 const ProjectPreview = async ({ params }: any) => {
   const paramsID = await params
+  const decodedID = decodeURIComponent(paramsID.id); 
   const local = await getLocale()
   const translate = await getTranslations("BlogPage")
   const e = await getTranslations("Error")
 
-  if (!paramsID.id) return null
+  if (!decodedID) {
+    console.log("ID not found")
+    return null
+  }
 
-  const res = await getProjectPublic(undefined, paramsID.id, local, true)
-
-  if (res.status !== 200) return null
+  const res = await getProjectPublic(undefined, decodedID, local, true)
+  if (res.status !== 200) {
+    console.log(res)
+    return null
+  }
 
   const categories = res.data.categories
-    .map((category: any) => {
-      if (local === "en") {
-        return category.name
-      } else if (local === "fr") {
-        return category.namefr ?? category.name
-      } else if (local === "ar") {
-        return category.namear ?? category.name
-      }
-      return category.name
-    })
-    .join(", ")
+    .map((category: any) => category.name)
+    .join(", ");
 
   const baseUrl = process.env.DOMAIN_URL || "http://localhost:3000"
-  const shareUrl = `${baseUrl}/projects/${paramsID.id}`
+  const shareUrl = `${baseUrl}/projects/${decodedID}`
 
   return (
     <div className="p-4 py-8 flex gap-2 overflow-auto">

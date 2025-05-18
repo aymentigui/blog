@@ -6,10 +6,10 @@ import { getProjectsCategories } from '@/actions/project/categories/get';
 import AddProjectForm from '../../_component/forms/add-project';
 
 
-const UpdateProject = async (params : any ) => {
+const UpdateProject = async ({params} : any ) => {
 
     const paramsID = await params
-
+    
     if (!paramsID.id)
         return null
     const session = await verifySession()

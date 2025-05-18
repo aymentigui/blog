@@ -13,10 +13,11 @@ import SideBarBlog from "@/components/my/public/sidebar-blog";
 import MyImage from "@/components/myui/my-image";
 
 // Server-side function to fetch blog data
-export async function generateMetadata(params : any): Promise<Metadata> {
+export async function generateMetadata({params} : any): Promise<Metadata> {
   const paramsID = await params
+  const decodedID = decodeURIComponent(paramsID.id)
   const local = await getLocale();
-  const res = await getBlogPublic(undefined, paramsID.id, local, true);
+  const res = await getBlogPublic(undefined, decodedID, local, true);
   
   if (res.status !== 200) return {}; // If not found, return empty metadata
   
@@ -25,7 +26,7 @@ export async function generateMetadata(params : any): Promise<Metadata> {
     .join(", ");
     
   const baseUrl = process.env.DOMAIN_URL || "http://localhost:3000";
-  const shareUrl = `${baseUrl}/blogs/${paramsID.id}`;
+  const shareUrl = `${baseUrl}/blogs/${decodedID}`;
   
 
   return {
@@ -63,6 +64,7 @@ export async function generateMetadata(params : any): Promise<Metadata> {
 
 const BlogPreview = async ({ params }: any) => {
   const paramsID = await params;
+  const decodedID = decodeURIComponent(paramsID.id)
   const local = await getLocale();
   const translate = await getTranslations("BlogPage");
   const e = await getTranslations("Error");
@@ -73,9 +75,9 @@ const BlogPreview = async ({ params }: any) => {
     user = session.data.user;
   }
   
-  if (!paramsID.id) return null;
+  if (!decodedID) return null;
   
-  const res = await getBlogPublic(undefined, paramsID.id, local, true);
+  const res = await getBlogPublic(undefined, decodedID, local, true);
   
   if (res.status !== 200) return null;
   
@@ -84,7 +86,7 @@ const BlogPreview = async ({ params }: any) => {
     .join(", ");
     
   const baseUrl = process.env.DOMAIN_URL || "http://localhost:3000";
-  const shareUrl = `${baseUrl}/blogs/${paramsID.id}`;
+  const shareUrl = `${baseUrl}/blogs/${decodedID}`;
 
   return (
     <div className="p-4 py-8 flex flex-col lg:flex-row gap-2 overflow-auto">

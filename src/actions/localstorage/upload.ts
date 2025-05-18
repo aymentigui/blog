@@ -19,12 +19,16 @@ export const uploadFile = async (filePathNameExtension: string, file: File) => {
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
     }
-    const filePath = path.join(process.cwd(), filePathNameExtension);
-
-    if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-        return { status: 200, data: { path: filePathNameExtension} };
-    } else {
-        return { status: 409 };
+    let filePath = path.join(process.cwd(), filePathNameExtension);
+    let fileName = filePathNameExtension;
+    let i = 1;
+    while (fs.existsSync(filePath)) {
+        const nameParts = fileName.split('.');
+        const name = nameParts.slice(0, -1).join('.');
+        const extension = nameParts[nameParts.length - 1];
+        fileName = `${name} (${i++}).${extension}`;
+        filePath = path.join(process.cwd(), fileName);
     }
+    fs.writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
+    return { status: 200, data: { path: fileName} };
 };
