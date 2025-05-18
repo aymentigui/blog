@@ -8,22 +8,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Générer les entrées pour les articles
   const blogEntries: MetadataRoute.Sitemap = blogs.map(({ slug, created_at }) => ({
-    url: `${process.env.DOMAIN_URL}/blogs/${slug}`,
+    url: `https://aimen-blog.com/blogs/${slug}`,
     lastModified: new Date(created_at),
   }));
 
   const projectEntries: MetadataRoute.Sitemap = projects.map(({ slug, created_at }) => ({
-    url: `${process.env.DOMAIN_URL}/projects/${slug}`,
+    url: `https://aimen-blog.com/projects/${slug}`,
     lastModified: new Date(created_at),
   }));
 
   // Retourner le sitemap complet
   return [
-    { url: `${process.env.DOMAIN_URL}/` },
-    { url: `${process.env.DOMAIN_URL}/contact` },
-    { url: `${process.env.DOMAIN_URL}/about` },
-    { url: `${process.env.DOMAIN_URL}/blogs` },
-    { url: `${process.env.DOMAIN_URL}/projects` },
+    { url: `https://aimen-blog.com/` },
+    { url: `https://aimen-blog.com/contact` },
+    { url: `https://aimen-blog.com/about` },
+    { url: `https://aimen-blog.com/blogs` },
+    { url: `https://aimen-blog.com/projects` },
     ...blogEntries,
     ...projectEntries,
   ];
