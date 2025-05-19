@@ -63,15 +63,15 @@ export async function UpdateProject(id: string, titles: any[], descriptions: any
         await prisma.project_titles.deleteMany({ where: { project_id: id } });
         await prisma.project_description.deleteMany({ where: { project_id: id } });
         await prisma.project_content.deleteMany({ where: { project_id: id } });
-        await prisma.project_categories.deleteMany({ 
-            where: {
-                project : {
-                    some: {
-                        id
-                    }
+        await prisma.project.update(
+            {
+                where: { id },
+                data: {
+                    categories: undefined
                 }
             }
-        });
+        )
+
 
         await prisma.project.update({
             where: { id },
@@ -93,7 +93,6 @@ export async function UpdateProject(id: string, titles: any[], descriptions: any
                     })),
                 },
                 categories: {
-                    deleteMany: {},
                     connect: categories.map((category: any) => ({
                         id: category,
                     })),

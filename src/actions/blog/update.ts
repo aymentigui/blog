@@ -63,15 +63,14 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
         await prisma.blog_titles.deleteMany({ where: { blog_id: id } });
         await prisma.blog_description.deleteMany({ where: { blog_id: id } });
         await prisma.blog_content.deleteMany({ where: { blog_id: id } });
-        await prisma.blogs_categories.deleteMany({ 
-            where: {
-                products : {
-                    some: {
-                        id
-                    }
+        await prisma.blog.update(
+            {
+                where: { id },
+                data: {
+                    categories: undefined
                 }
             }
-        });
+        )
 
         await prisma.blog.update({
             where: { id },
