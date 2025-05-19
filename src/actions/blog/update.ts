@@ -18,7 +18,7 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
         }
         const hasPermissionAdd = await withAuthorizationPermission(['blogs_update'], session.data.user.id);
 
-        const blog = await prisma.blog.findUnique({ where: { id }});
+        const blog = await prisma.blog.findUnique({ where: { id }, include: { categories: true } });
 
         if(!blog)
             return { status: 404, data: { message: b("blognotfound") } };
@@ -67,7 +67,11 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
             {
                 where: { id },
                 data: {
-                    categories: undefined
+                    categories: {
+                        disconnect: blog.categories.map((category: any) => ({
+                            id: category.id
+                        }))
+                    }
                 }
             }
         )

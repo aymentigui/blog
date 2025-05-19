@@ -18,7 +18,7 @@ export async function UpdateProject(id: string, titles: any[], descriptions: any
         }
         const hasPermissionAdd = await withAuthorizationPermission(['projects_update'], session.data.user.id);
 
-        const project = await prisma.project.findUnique({ where: { id }});
+        const project = await prisma.project.findUnique({ where: { id }, include: { categories: true } });
 
         if(!project)
             return { status: 404, data: { message: b("projectnotfound") } };
@@ -67,7 +67,11 @@ export async function UpdateProject(id: string, titles: any[], descriptions: any
             {
                 where: { id },
                 data: {
-                    categories: undefined
+                    categories: {
+                        disconnect: project.categories.map((category: any) => ({
+                            id: category.id
+                        }))
+                    }
                 }
             }
         )
