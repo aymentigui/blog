@@ -135,7 +135,7 @@ export async function getBlogsDesc(page: number = 1, pageSize: number = 10, sear
                 image: (blog.image && blog.image !== "")
                     ? blog.image
                     : null,
-                    title: blog.titles.find((title: any) => title.language === locale)
+                title: blog.titles.find((title: any) => title.language === locale)
                     ? blog.titles.find((title: any) => title.language === locale)?.title
                     : blog.titles.find((title: any) => title.language === 'en')
                         ? blog.titles.find((title: any) => title.language === 'en')?.title
@@ -223,7 +223,7 @@ export async function getBlogsDescFavorites(page: number = 1, pageSize: number =
             orderBy: sortedBy && sortedBy === "popular" ? { views: 'desc' } : { created_at: 'desc' },
             include: {
                 categories: true,
-                blog_favorites:true,
+                blog_favorites: true,
                 titles: {
                     select: {
                         title: true,
@@ -366,7 +366,7 @@ export async function getBlogPublic(id?: string, slug?: string, langage?: string
                 contents: {
                     orderBy: { order: 'asc' },
                     where: { language: lang },
-                    select: { data: true, language: true, type:true },
+                    select: { data: true, language: true, type: true },
                 }
             }
         });
@@ -395,7 +395,7 @@ export async function getBlogPublic(id?: string, slug?: string, langage?: string
 
 
         if (blogDetail && (!blogDetail.contents || blogDetail.contents.length == 0)) {
-            const contents = await prisma.blog.findUnique({ where: { id: blog.id }, include: { contents: { where: { language: "en" }, select: { data: true, language: true,  type: true }, orderBy: { order: 'asc' }, } } })
+            const contents = await prisma.blog.findUnique({ where: { id: blog.id }, include: { contents: { where: { language: "en" }, select: { data: true, language: true, type: true }, orderBy: { order: 'asc' }, } } })
             if (contents && contents.contents.length !== 0)
                 blogDetail.contents = contents.contents
             else {
