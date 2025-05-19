@@ -43,12 +43,12 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
                     <button className="lg:hidden p-2" onClick={toggleMenu} >
                         <X className="w-6 h-6 absolute top-8 right-8" />;
                     </button>
-                    <Link href="/" className='hidden lg:block'><Image src="/logo.png" className="w-16 h-16 rounded-full" alt="logo" width={100} height={100} loading="lazy" /></Link>
-                    <Link href="/#" className="hover:underline">{header("home")}</Link>
-                    <Link href="/blogs" className="hover:underline">{header("blogs")}</Link>
-                    <Link href="/projects" className="hover:underline">{header("projects")}</Link>
-                    <Link href="/contact" className="hover:underline">{header("contactus")}</Link>
-                    <Link href="/about" className="hover:underline">{header("aboutus")}</Link>
+                    <Link onClick={toggleMenu} href="/" className='hidden lg:block'><Image src="/logo.png" className="w-16 h-16 rounded-full" alt="logo" width={100} height={100} loading="lazy" /></Link>
+                    <Link onClick={toggleMenu} href="/#" className="hover:underline">{header("home")}</Link>
+                    <Link onClick={toggleMenu} href="/blogs" className="hover:underline">{header("blogs")}</Link>
+                    <Link onClick={toggleMenu} href="/projects" className="hover:underline">{header("projects")}</Link>
+                    <Link onClick={toggleMenu} href="/contact" className="hover:underline">{header("contactus")}</Link>
+                    <Link onClick={toggleMenu} href="/about" className="hover:underline">{header("aboutus")}</Link>
                 </nav>
             </div>
             <div className='flex flex-wrap gap-2'>
