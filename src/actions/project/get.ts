@@ -134,16 +134,20 @@ export async function getProjectsDesc(page: number = 1, pageSize: number = 10, s
                 image: (project.image && project.image !== "")
                     ? project.image
                     : null,
-                title: project.titles.find((title: any) => title.language === locale)?.title
-                    ?? project.titles.find((title: any) => title.language === 'en')?.title
-                    ?? project.titles
-                    ? project.titles[0].title
-                    : "",
-                description: project.description.find((desc: any) => desc.language === locale)?.description
-                    ?? project.description.find((desc: any) => desc.language === 'en')?.description
-                    ?? project.description[0]
-                    ? project.description[0].description
-                    : "",
+                title: project.titles.find((title: any) => title.language === locale)
+                    ? project.titles.find((title: any) => title.language === locale)?.title
+                    : project.titles.find((title: any) => title.language === 'en')
+                        ? project.titles.find((title: any) => title.language === 'en')?.title
+                        : project.titles && project.titles[0] && project.titles[0].title
+                            ? project.titles[0].title
+                            : "",
+                description: project.description.find((desc: any) => desc.language === locale)
+                    ? project.description.find((desc: any) => desc.language === locale)?.description
+                    : project.description.find((desc: any) => desc.language === 'en')
+                        ? project.description.find((desc: any) => desc.language === 'en')?.description
+                        : project.description && project.description[0] && project.description[0].description
+                            ? project.description[0].description
+                            : "",
                 categories: project.categories.map((category) => (
                     {
                         title: locale === "en" && category.name
@@ -245,7 +249,7 @@ export async function getProjectPublic(id?: string, slug?: string, langage?: str
                 contents: {
                     orderBy: { order: 'asc' },
                     where: { language: lang },
-                    select: { data: true, language: true, type:true },
+                    select: { data: true, language: true, type: true },
                 }
             }
         });
@@ -274,7 +278,7 @@ export async function getProjectPublic(id?: string, slug?: string, langage?: str
 
 
         if (projectDetail && (!projectDetail.contents || projectDetail.contents.length == 0)) {
-            const contents = await prisma.project.findUnique({ where: { id: project.id }, include: { contents: { where: { language: "en" }, select: { data: true, language: true,  type: true }, orderBy: { order: 'asc' }, } } })
+            const contents = await prisma.project.findUnique({ where: { id: project.id }, include: { contents: { where: { language: "en" }, select: { data: true, language: true, type: true }, orderBy: { order: 'asc' }, } } })
             if (contents && contents.contents.length !== 0)
                 projectDetail.contents = contents.contents
             else {

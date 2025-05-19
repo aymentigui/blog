@@ -135,16 +135,20 @@ export async function getBlogsDesc(page: number = 1, pageSize: number = 10, sear
                 image: (blog.image && blog.image !== "")
                     ? blog.image
                     : null,
-                title: blog.titles.find((title: any) => title.language === locale)?.title
-                    ?? blog.titles.find((title: any) => title.language === 'en')?.title
-                    ?? blog.titles
-                    ? blog.titles[0].title
-                    : "",
-                description: blog.description.find((desc: any) => desc.language === locale)?.description
-                    ?? blog.description.find((desc: any) => desc.language === 'en')?.description
-                    ?? blog.description[0]
-                    ? blog.description[0].description
-                    : "",
+                    title: blog.titles.find((title: any) => title.language === locale)
+                    ? blog.titles.find((title: any) => title.language === locale)?.title
+                    : blog.titles.find((title: any) => title.language === 'en')
+                        ? blog.titles.find((title: any) => title.language === 'en')?.title
+                        : blog.titles && blog.titles[0] && blog.titles[0].title
+                            ? blog.titles[0].title
+                            : "",
+                description: blog.description.find((desc: any) => desc.language === locale)
+                    ? blog.description.find((desc: any) => desc.language === locale)?.description
+                    : blog.description.find((desc: any) => desc.language === 'en')
+                        ? blog.description.find((desc: any) => desc.language === 'en')?.description
+                        : blog.description && blog.description[0] && blog.description[0].description
+                            ? blog.description[0].description
+                            : "",
                 categories: blog.categories.map((category) => (
                     {
                         title: locale === "en" && category.name
