@@ -51,7 +51,7 @@ export default function ProjectPage() {
     const [currentPage, setCurrentPage] = useState(1)
     const [count, setCount] = useState(0)
 
-    const articlesPerPage = 6
+    const articlesPerPage = 9
 
     // Effet pour mettre à jour la recherche debouncée
     useEffect(() => {
@@ -62,7 +62,7 @@ export default function ProjectPage() {
     // Effet pour filtrer les articles
     useEffect(() => {
         fetchProjects(setProjects, setIsLoading, currentPage, articlesPerPage, setCount, debouncedSearchQuery, selectedCategories, sortBy)
-    }, [debouncedSearchQuery, selectedCategories, sortBy])
+    }, [debouncedSearchQuery, selectedCategories, sortBy, currentPage])
 
     // Effet pour paginer les articles filtrés
 
