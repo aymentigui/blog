@@ -54,17 +54,20 @@ export async function sendEmails(emailList: string[], subject: string, html: str
         console.error('Email configuration is missing')
         return
     }
+
     const chunkSize = 500;
-    for (let i = 0; i < emailList.length; i += chunkSize) {
-        const chunk = emailList.slice(i, i + chunkSize);
-        await transporter.sendMail({
-            from: `Aimen Blog`,
-            to: process.env.EMAIL_USER,
-            bcc: chunk,
-            subject,
-            html: html,
-        });
-    }
+    await Promise.all(
+        Array.from({ length: Math.ceil(emailList.length / chunkSize) }, (_, i) => {
+            const chunk = emailList.slice(i * chunkSize, (i + 1) * chunkSize);
+            return transporter.sendMail({
+                from: process.env.EMAIL_FROM,
+                to: "aymentigui5@gmail.com",
+                bcc: chunk.join(','),
+                subject,
+                html,
+            });
+        }),
+    );
 }
 // Fonction pour lire un template HTML
 const getEmailTemplate = async (templateName: string): Promise<string> => {
@@ -154,6 +157,7 @@ export async function sendUnsubscribeEmail(data: UnsubscribeEmailData): Promise<
 export async function sendNewBlogEmail(data: NewBlogEmailData): Promise<{ status: number; message: string }> {
     try {
         const template = await getEmailTemplate('email-new-blog');
+
         const html = replaceTemplateVariables(template, {
             title: data.title,
             categorie: data.categorie,
@@ -163,6 +167,7 @@ export async function sendNewBlogEmail(data: NewBlogEmailData): Promise<{ status
         });
 
         const emails = await prisma.subscriber.findMany()
+
         await sendEmails(
             emails.map((email) => email.email),
             `Nouvel article: ${data.title}`,

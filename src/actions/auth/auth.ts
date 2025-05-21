@@ -8,6 +8,7 @@ import { send2FACode, sendCode, sendEmail } from '../email';
 import { createTowFactorConfermation } from './tow-factor-confermation';
 import { getTranslations } from 'next-intl/server';
 import { verifySession } from '../permissions';
+import { subscribe } from '../blog/subscribe';
 
 
 
@@ -66,6 +67,9 @@ export async function registerUser(data: any): Promise<{ status: number, data: a
                 password: passwordHash, // Note: In a real application, make sure to hash the password before storing it
             },
         });
+
+        await subscribe(email)
+
         return { status: 201, data: newUser };
     } catch (error) {
         if (error instanceof Error) {

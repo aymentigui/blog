@@ -36,7 +36,7 @@ const UpdateProject = async ({params} : any ) => {
     return (
         <Card className='p-4'>
             <div className='flex flex-col gap-2 '>
-                <AddProjectForm isAdd={false} project={res.data} categories={categories} />
+                <AddProjectForm isAdd={false} project={res.data} selectedCategories={res.data.categories.map((category: any) => category.id)}  categories={categories} />
             </div>
         </Card>
     )

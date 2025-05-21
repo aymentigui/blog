@@ -33,10 +33,11 @@ const UpdateBlog = async ({params} : any) => {
     if(resCategories.status === 200 && resCategories.data)
       categories = resCategories.data
 
+
     return (
         <Card className='p-4'>
             <div className='flex flex-col gap-2 '>
-                <AddBlogForm isAdd={false} blog={res.data} categories={categories} />
+                <AddBlogForm isAdd={false} blog={res.data} selectedCategories={res.data.categories.map((category: any) => category.id)} categories={categories} />
             </div>
         </Card>
     )

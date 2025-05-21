@@ -94,12 +94,22 @@ export async function AddBlog(titles: any[], descriptions: any[], components: an
         //     descriptions: descriptions[0].value +,
         //   });
 
-        fetch("/api/email", {
+        const myCategories = await prisma.blogs_categories.findMany({
+            where: {
+                products: {
+                    some: {
+                        id: blog.id
+                    }
+                }
+            }
+        })
+
+        fetch((process.env.DOMAIN_URL ?? "http://localhost:3000")+"/api/email", {
             method: "POST",
             body: JSON.stringify({
-                title: titles[0].value + "--" + (titles[1] ? titles[0].value : "") + "--" + (titles[2] ? titles[0].value : ""),
-                description: descriptions[0].value,
-                categorie: JSON.stringify(categories),
+                title: titles[0].value + (titles[1] ?  "--" +titles[1].value : "") + (titles[2] ?  "--" + titles[2].value : ""),
+                description: descriptions && descriptions.length > 0 && descriptions[0].value? descriptions[0].value : "",
+                categorie: JSON.stringify(myCategories && myCategories.length > 0 ? myCategories.map((cat) => cat.name).join(", ") : ""),
                 slug: slug
             }),
         });
