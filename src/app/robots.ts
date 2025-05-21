@@ -9,6 +9,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
 				disallow: ["/admin"]
 			}
 		],
-		sitemap: `https://aimen-blog.com//sitemap.xml`
+		sitemap: `https://aimen-blog.com/sitemap.xml`
 	}
 }
