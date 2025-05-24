@@ -90,10 +90,10 @@ export async function getBlogsDesc(page: number = 1, pageSize: number = 10, sear
                 //@ts-ignore
                 if (conditions.AND) {
                     //@ts-ignore
-                    conditions.AND.push({ createdBy: session.data.user.id });
+                    conditions.AND.push({ created_by: session.data.user.id });
                 } else {
                     //@ts-ignore
-                    conditions.AND = [{ createdBy: session.data.user.id }];
+                    conditions.AND = [{ created_by: session.data.user.id }];
                 }
             }
         }

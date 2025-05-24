@@ -41,7 +41,7 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
                     "transition-all duration-300 ease-in-out z-50",
                 )}>
                     <button className="lg:hidden p-2" onClick={toggleMenu} >
-                        <X className="w-6 h-6 absolute top-8 right-8" />;
+                        <X className="w-6 h-6 absolute top-8 right-8" />
                     </button>
                     <Link onClick={toggleMenu} href="/" className='hidden lg:block'><Image src="/logo.png" className="w-16 h-16 rounded-full" alt="logo" width={100} height={100} loading="lazy" /></Link>
                     <Link onClick={toggleMenu} href="/#" className="hover:underline">{header("home")}</Link>

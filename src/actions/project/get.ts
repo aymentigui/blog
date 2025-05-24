@@ -89,10 +89,10 @@ export async function getProjectsDesc(page: number = 1, pageSize: number = 10, s
                 //@ts-ignore
                 if (conditions.AND) {
                     //@ts-ignore
-                    conditions.AND.push({ createdBy: session.data.user.id });
+                    conditions.AND.push({ created_by: session.data.user.id });
                 } else {
                     //@ts-ignore
-                    conditions.AND = [{ createdBy: session.data.user.id }];
+                    conditions.AND = [{ created_by: session.data.user.id }];
                 }
             }
         }

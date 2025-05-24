@@ -61,7 +61,17 @@ const ListProjects = ({ hideFliterPageSize }: any) => {
 
     useEffect(() => {
         fetchProjects();
-    }, [page, debouncedSearchQuery, mounted, pageSize, sortBy, mine]); // Ajouter debouncedSearchQuery comme dépendance
+    }, [page, mounted]); // Ajouter debouncedSearchQuery comme dépendance
+
+    useEffect(() => {
+        if (page === 1)
+            fetchProjects();
+        else {
+            setPage(1);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("page", "1");
+        }
+    }, [debouncedSearchQuery, mounted, pageSize, sortBy, mine, selectedCategories]);
 
 
     const fetchProjects = async () => {
@@ -73,18 +83,13 @@ const ListProjects = ({ hideFliterPageSize }: any) => {
             const res = await getProjectsDesc(page, pageSize, debouncedSearchQuery, locale, selectedCategories, sortBy, mine)
 
             if (res.status === 200 && res.data) {
+                setCount(res.count);
                 const newData = res.data.map((project: any) => ({
                     ...project,
                     categories: project.categories.map((category: any) => category.title).join(", ")
                 }))
                 setData(newData);
             }
-
-            const countResponse = await getProjectsCount(debouncedSearchQuery)
-            if (countResponse.status === 200) {
-                setCount(countResponse.data);
-            }
-
         } catch (error) {
             console.error("Error fetching projects:", error);
         } finally {
@@ -92,7 +97,7 @@ const ListProjects = ({ hideFliterPageSize }: any) => {
         }
     };
 
-    if (!mounted || isLoading) {
+    if (!mounted && isLoading) {
         return (
             <div className="h-[300px] flex items-center justify-center">
                 <Loading />

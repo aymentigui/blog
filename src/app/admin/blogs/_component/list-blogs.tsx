@@ -61,8 +61,17 @@ const ListBlogs = ({ hideFliterPageSize }: any) => {
 
     useEffect(() => {
         fetchBlogs();
-    }, [page, debouncedSearchQuery, mounted, pageSize, sortBy, mine]); // Ajouter debouncedSearchQuery comme dépendance
+    }, [page, mounted]); // Ajouter debouncedSearchQuery comme dépendance
 
+    useEffect(() => {
+        if (page === 1)
+            fetchBlogs();
+        else {
+            setPage(1);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("page", "1");
+        }
+    }, [debouncedSearchQuery, mounted, pageSize, sortBy, mine,selectedCategories]); 
 
     const fetchBlogs = async () => {
         setData([]);
@@ -78,13 +87,8 @@ const ListBlogs = ({ hideFliterPageSize }: any) => {
                     categories: blog.categories.map((category: any) => category.title).join(", ")
                 }))
                 setData(newData);
+                setCount(res.count);
             }
-
-            const countResponse = await getBlogsCount(debouncedSearchQuery)
-            if (countResponse.status === 200) {
-                setCount(countResponse.data);
-            }
-
         } catch (error) {
             console.error("Error fetching users:", error);
         } finally {
@@ -92,7 +96,7 @@ const ListBlogs = ({ hideFliterPageSize }: any) => {
         }
     };
 
-    if (!mounted || isLoading) {
+    if (!mounted && isLoading) {
         return (
             <div className="h-[300px] flex items-center justify-center">
                 <Loading />
