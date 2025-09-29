@@ -1,7 +1,7 @@
 import { accessPage, verifySession } from '@/actions/permissions';
 import { Card } from '@/components/ui/card';
 import React from 'react'
-import AddBlogForm from '../_component/forms/add-blog';
+import AddBlogForm from '../_component/forms/add-edit-blog';
 import { getBlogsCategories } from '@/actions/blog/categories/get';
 
 

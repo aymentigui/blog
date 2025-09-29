@@ -30,6 +30,7 @@ export async function PUT(request: Request, { params }: { params: any }) {
         }
     })
 
+    console.log({images, deleteImage, files, newContents})
     
     const role = await UpdateBlog(paramsID.id, titles, descriptions, newContents, images, slug, categories, deleteImage);
 

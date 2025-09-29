@@ -24,7 +24,7 @@ const acceptedFileTypes = {
     ]
 }
 
-const ImageBuilder = ({ value, onChangeValue }: any) => {
+const ImageBuilder = ({ value, onChangeValue, widthControl=true }: any) => {
     const [files, setFiles] = useState<any[] | []>([])
     const [valRec, setValRec] = useState(value ?? "")
     const translate = useTranslations("Blogs")
@@ -68,15 +68,20 @@ const ImageBuilder = ({ value, onChangeValue }: any) => {
             if (onChangeValue) {
                 onChangeValue({ ...valRec, file: files[0] })
             };
+        }else{
+            setValRec({ ...valRec, file: null })
+            if (onChangeValue) {
+                onChangeValue({ ...valRec, file: null, url: "" })
+            };
         }
     }, [files])
 
     return <div className='p-2 border rounded-md flex flex-col gap-4'>
         <ListFilesForm acceptedFileTypes={acceptedFileTypes} multiple={false} havetype='image' filesSelected={files} setFilesSelected={setFiles} />
-        <div>
+        {widthControl && <div>
             <Label className='mb-2'>{translate("width")}</Label>
             <Input type="number" value={valRec.width ?? 0} onChange={handleChangeWidth} className='' />
-        </div>
+        </div>}
         {/* <Input ref={inputRef} accept='image/*' type='file' onChange={(e) => {
             if (e.target.files) {
                 setVal(e.target.value);
@@ -86,7 +91,7 @@ const ImageBuilder = ({ value, onChangeValue }: any) => {
     </div>
 };
 
-export const ImagePreview = ({ value }: any) => {
+export const ImagePreview = ({ value, width,height, className,style }: any) => {
     const origin = useOrigin()
     const [preview, setPreview] = useState<string>("/not_found.jpg")
 
@@ -98,7 +103,7 @@ export const ImagePreview = ({ value }: any) => {
         if (value && value.file) {
             setPreview(URL.createObjectURL(value.file.file))
         }
-        else if (value && value.url) {
+        else if (value && value.url && value.url !== "") {
             if (!origin) return
             const response = await fetch(origin + "/api/files/" + value.url + "?allFile=true");
 
@@ -113,9 +118,10 @@ export const ImagePreview = ({ value }: any) => {
         ? <Image
             alt='imagepreview'
             src={preview}
-            width={1000}
-            height={1000}
-            style={{
+            className={className ?? ""}
+            width={width ?? 1000}
+            height={height ?? 1000}
+            style={style??{
                 width: (value.width ?? 100) + "%",
                 height: "auto",
                 marginLeft: "auto",

@@ -52,6 +52,9 @@ export async function UpdateBlog(id: string, titles: any[], descriptions: any[],
             const res = await uploadFileDB(image, session.data.user.id)
             if (res.status === 200) {
                 url = res.data.file.id
+                console.log(url)
+            }else{
+                console.log("Error to upload image")
             }
         }
         if (imageBlog?.image && (url !== "" || deleteImage)) {
