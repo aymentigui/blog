@@ -118,6 +118,9 @@ export async function GET(request: Request) {
         take: pageSize, // Nombre d'éléments à prendre
         // @ts-ignore
         where: where.length ? { AND: where } : {},
+        orderBy: {
+            createdAt: "desc",
+        }
     })
 
     if (!files) {

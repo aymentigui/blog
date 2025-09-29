@@ -2,7 +2,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
-// Fonction pour échapper les caractères spéciaux dans le XML
+export const revalidate = 3600; 
+
 function escapeXml(unsafe: string) {
   return unsafe
     .replace(/&/g, '&amp;')
