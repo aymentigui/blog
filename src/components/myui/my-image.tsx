@@ -9,7 +9,7 @@ const MyImage = (
 
     return (
         <LzyImage
-            src={isNotApi?image:GetImage(image)}
+            src={isNotApi?image:(image?GetImage(image):"/placeholder.png")}
             alt={alt??"image..."}
             load
             className={classNameProps??"w-full h-[150px] md:h-[200px] bg-accent"}

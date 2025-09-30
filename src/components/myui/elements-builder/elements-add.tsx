@@ -11,6 +11,7 @@ const AddElement = ({ onAdd, langage }: any) => {
   const [open, setOpen] = useState(false);
 
   const options = [
+    { label: translate("text")+" EditorJs", langage: langage, type: 'text2', icon: <FileText size={18} /> },
     { label: translate("text"), langage: langage, type: 'text', icon: <FileText size={18} /> },
     { label: translate("titlebig"), langage: langage, type: 'title', icon: <Type size={18} /> },
     { label: translate("titlemedium"), langage: langage, type: 'titleh2', icon: <Type size={18} /> },

@@ -15,6 +15,7 @@ import { FilePreviewBuilder } from './elements/file-elements';
 import { FilesPreviewBuilder } from './elements/files-elements';
 import { ImagesPreview } from './elements/images-element';
 import { LinkPreview } from './elements/link-element';
+import { EditorJsPreview } from './elements/text2-element';
 
 const PreviewBuilder = ({ id, type, value, setFocus, removeComponent, langage, duplicateComponent }: any) => {
 
@@ -49,6 +50,7 @@ const PreviewBuilder = ({ id, type, value, setFocus, removeComponent, langage, d
             }
             <SortableItem key={id} id={id} onClick={() => { setFocus(id) }}>
                 {type === 'text' && <TextPreview value={value} />}
+                {type === 'text2' && <EditorJsPreview value={value} />}
                 {type === 'image' && <ImagePreview value={value} />}
                 {type === 'images' && <ImagesPreview value={value} />}
                 {type === 'video' && <VideoPreview value={value} />}
@@ -70,6 +72,7 @@ export const PreviewBuilderHtml = ({ type, value }: any) => {
     return (
         <>
             {type === 'text' && <TextPreview value={value} />}
+            {type === 'text2' && <EditorJsPreview value={value} />}
             {type === 'image' && <ImagePreview value={value} />}
             {type === 'images' && <ImagesPreview value={value} />}
             {type === 'video' && <VideoUploader value={value} />}

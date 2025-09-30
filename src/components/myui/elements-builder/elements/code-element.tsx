@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 interface CodeBuilderProps {
   value?: string;

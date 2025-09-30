@@ -13,12 +13,14 @@ import CodeBuilder from './elements/code-element';
 import FilesBuilder from './elements/files-elements';
 import ImagesBuilder from './elements/images-element';
 import LinkBuilder from './elements/link-element';
+import EditorJsBuilder from './elements/text2-element';
 
 const ElementBuilder = ({ id, type, value, removeComponent, setBlur, handleChangeValue }: any) => {
 
     return (
         <div key={id} className='border p-4 rounded-md relative'>
             {type === 'text' && <TextBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
+            {type === 'text2' && <EditorJsBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'image' && <ImageBuilder value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'video' && <VideoUploader value={value} onChangeValue={(val: any) => handleChangeValue(id, val)} />}
             {type === 'file' && <FileBuilder  value={value} onChangeValue={(val: any) => handleChangeValue(id, val)}/>}
