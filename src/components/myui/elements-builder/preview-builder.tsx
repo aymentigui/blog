@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import VideoUploader from './elements/video-element'
 import { ImagePreview } from './elements/image-element';
 import { VideoPreview } from './elements/video-element';
-import { useTranslations } from 'next-intl';
 import { ParagraphPreview } from './elements/paragraph-element';
 import { TitlePreview } from './elements/title-element';
 import { TextPreview } from './elements/text-element';
@@ -15,11 +14,10 @@ import { FilePreviewBuilder } from './elements/file-elements';
 import { FilesPreviewBuilder } from './elements/files-elements';
 import { ImagesPreview } from './elements/images-element';
 import { LinkPreview } from './elements/link-element';
-import { EditorJsPreview } from './elements/text2-element';
+import EditorJsPreview from './elements/text2-element-preview';
 
 const PreviewBuilder = ({ id, type, value, setFocus, removeComponent, langage, duplicateComponent }: any) => {
 
-    const translate = useTranslations("Blogs")
     const [hover, setHover] = useState(false)
 
     return (

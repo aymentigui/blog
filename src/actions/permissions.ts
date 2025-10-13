@@ -62,7 +62,7 @@ export async function verifySession(): Promise<{ status: number, data: any }> {
 
         return { status: 200, data: session }
     } catch (error) {
-        console.log("An error occurred in verifySession");
+        // console.log("An error occurred in verifySession");
         return { status: 500, data: { message: e("error") } }
     }
 }

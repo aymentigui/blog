@@ -92,7 +92,7 @@ const BlogPreview = async ({ params }: any) => {
     <div className="p-4 py-8 flex flex-col lg:flex-row gap-2 overflow-auto">
       <AddViewBlog id={res.data.id} />
       {/* content blog */}
-      <div className="w-full lg:w-3/4 px-4">
+      <div className="w-full lg:w-4/4 px-4">
         <div className="my-4 relative overflow-hidden">
           <MyImage classNameProps="w-full h-[300px] lg:h-[400px] bg-accent" objet_fit="object-contain" image={res.data.image} />
           <div className="absolute w-full flex items-center justify-between gap-2 p-4 top-0 right-0">
@@ -142,7 +142,6 @@ const BlogPreview = async ({ params }: any) => {
         </div>
         <CommentSection blogId={res.data.id} />
       </div>
-      <SideBarBlog />
     </div>
   )
 }

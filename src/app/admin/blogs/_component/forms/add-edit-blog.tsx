@@ -294,7 +294,7 @@ const BlogEditor = ({ blog, isAdd, categories, selectedCategories }: BlogEditorP
         if (image2 && image2.file && image2.file.file) {
             formData.append("file", image2.file.file);
         }
-        formData.append("deleteImage", (!isAdd && !image2.file) ? "true" : "false");
+        formData.append("deleteImage", (!isAdd && !image2) ? "true" : "false");
 
         // Titles and descriptions
         formData.append("titles", JSON.stringify(prepareTitles()));

@@ -64,13 +64,13 @@ const ProjectPreview = async ({ params }: any) => {
   const e = await getTranslations("Error")
 
   if (!decodedID) {
-    console.log("ID not found")
+    // console.log("ID not found")
     return null
   }
 
   const res = await getProjectPublic(undefined, decodedID, local, true)
   if (res.status !== 200) {
-    console.log(res)
+    // console.log(res)
     return null
   }
 
