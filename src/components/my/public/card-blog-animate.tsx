@@ -23,7 +23,7 @@ const CardBlogAnimate = ({ article }: any) => {
 
     return (
         <motion.div key={article.id} variants={fadeIn} whileHover={{ y: -5 }} transition={{ duration: 0.2 }}>
-            <Link href={"/blogs/"+article.slug}>
+            <a href={"/blogs/"+article.slug} target='_self'>
                 <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow duration-300">
                     <div className="relative h-48 w-full">
                         <MyImage
@@ -58,7 +58,7 @@ const CardBlogAnimate = ({ article }: any) => {
                         </span>
                     </CardFooter>
                 </Card>
-            </Link>
+            </a>
         </motion.div>
     )
 }

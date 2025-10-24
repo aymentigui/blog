@@ -2,8 +2,6 @@
 import React, { useState } from 'react'
 import LanguageSwitcher from '../language-switcher'
 import { ModeToggle } from '@/components/ui/mode-toggle'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { X } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
@@ -23,7 +21,10 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
             }
             return !p;
         }))
+    }
 
+    const redirectTo = (url: string) => {
+        window.location.href = url;
     }
 
     return (
@@ -35,7 +36,9 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
                     {/* Icon for the menu, can be a hamburger icon */}
                     &#9776;
                 </button>
-                <Link href="/" className='block lg:hidden'><Image src="/logo.png" className="w-8 h-8 rounded-full" alt="logo" width={100} height={100} loading="lazy" /></Link>
+                <button onClick={() => redirectTo("/")} className='block lg:hidden'>
+                    <Image src="/logo.png" className="w-8 h-8 rounded-full" alt="logo" width={100} height={100} loading="lazy" />
+                </button>
                 <nav className={cn("flex flex-col lg:flex-row absolute lg:relative top-0 w-full lg:w-auto h-screen lg:h-auto bg-border lg:bg-transparent justify-center lg:justify-end items-center gap-4 px-8",
                     openMenu ? "left-0" : " left-[-100%] lg:left-0",
                     "transition-all duration-300 ease-in-out z-50",
@@ -43,12 +46,14 @@ const HeaderPublic = ({ children }: { children?: React.ReactNode }) => {
                     <button className="lg:hidden p-2" onClick={toggleMenu} >
                         <X className="w-6 h-6 absolute top-8 right-8" />
                     </button>
-                    <Link onClick={toggleMenu} href="/" className='hidden lg:block'><Image src="/logo.png" className="w-16 h-16 rounded-full" alt="logo" width={100} height={100} loading="lazy" /></Link>
-                    <Link onClick={toggleMenu} href="/#" className="hover:underline">{header("home")}</Link>
-                    <Link onClick={toggleMenu} href="/blogs" className="hover:underline">{header("blogs")}</Link>
-                    <Link onClick={toggleMenu} href="/projects" className="hover:underline">{header("projects")}</Link>
-                    <Link onClick={toggleMenu} href="/contact" className="hover:underline">{header("contactus")}</Link>
-                    <Link onClick={toggleMenu} href="/about" className="hover:underline">{header("aboutus")}</Link>
+                    <button onClick={() => redirectTo("/")} className='hidden lg:block'>
+                        <Image src="/logo.png" className="w-16 h-16 rounded-full" alt="logo" width={100} height={100} loading="lazy" />
+                    </button>
+                    <button onClick={() => { toggleMenu(); redirectTo("/#"); }} className="hover:underline">{header("home")}</button>
+                    <button onClick={() => { toggleMenu(); redirectTo("/blogs"); }} className="hover:underline">{header("blogs")}</button>
+                    <button onClick={() => { toggleMenu(); redirectTo("/projects"); }} className="hover:underline">{header("projects")}</button>
+                    <button onClick={() => { toggleMenu(); redirectTo("/contact"); }} className="hover:underline">{header("contactus")}</button>
+                    <button onClick={() => { toggleMenu(); redirectTo("/about"); }} className="hover:underline">{header("aboutus")}</button>
                 </nav>
             </div>
             <div className='flex flex-wrap gap-2'>
