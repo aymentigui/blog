@@ -25,10 +25,10 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 
   return {
     title: res.data.titles[0].title, // Dynamic Title
-    description: res.data.description && res.data.description[0] && res.data.description[0].description, // Dynamic Description
+    description: res.data.description && res.data.description[0] && res.data.description[0].description+". TIGHIOUART Aimen's blog.", // Dynamic Description
     openGraph: {
       title: res.data.titles[0].title,
-      description: res.data.description && res.data.description[0] && res.data.description[0].description,
+      description: res.data.description && res.data.description[0] && res.data.description[0].description+". TIGHIOUART Aimen's blog.",
       url: shareUrl,
       siteName: "Aimen Blog",
       images: [
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: res.data.titles[0].title,
-      description: res.data.description && res.data.description[0] && res.data.description[0].description,
+      description: res.data.description && res.data.description[0] && res.data.description[0].description+ ". TIGHIOUART Aimen's blog.",
       images: [
         {
           url: res.data.image || "https://www.aimen-blog.com/logo.png", // Fallback Image

@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "About Me", // Page title for SEO
-    description: "Welcome to my web development blog, where I share my passion for Next.js, React, and other modern web technologies.", // Page description for SEO
+    description: "Welcome to my web development blog, where I share my passion for Next.js, React, and other modern web technologies. TIGHIOUART Aimen's blog.", // Page description for SEO
     openGraph: {
       title: "About Me - Aimen Blog", // OpenGraph title (used for social media sharing)
       description:
-        "Discover more about the developer behind Aimen Blog. Passionate about web development with Next.js, React, and modern technologies.",
+        "Discover more about the developer behind Aimen Blog. Passionate about web development with Next.js, React, and modern technologies. TIGHIOUART Aimen's blog.",
       url: "https://www.aimen-blog.com/about", // Page URL for OpenGraph
       siteName: "Aimen Blog", // Website name
       images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
       card: "summary_large_image", // Twitter card type
       title: "About Me", // Twitter title
       description:
-        "Learn more about the developer of Aimen Blog and the tech behind it.",
+        "Learn more about the developer of Aimen Blog and the tech behind it. TIGHIOUART Aimen's blog.",
       images: [
         {
           url: "https://www.aimen-blog.com/logo.png", // Image for Twitter card

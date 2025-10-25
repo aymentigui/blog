@@ -5,11 +5,11 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
     title: "Web Development Projects", // Title for SEO
     description:
-        "Explore the collection of my personal and professional web development projects. Learn about the technologies, tools, and techniques used in each project.",
+        "Explore the collection of my personal and professional web development projects. Learn about the technologies, tools, and techniques used in each project. TIGHIOUART Aimen's blog.",
     openGraph: {
         title: "Aimen Blog - Web Development Projects", // OpenGraph title
         description:
-            "Discover my web development projects, including Next.js, React.js, and full-stack web applications built with modern technologies.",
+            "Discover my web development projects, including Next.js, React.js, and full-stack web applications built with modern technologies. TIGHIOUART Aimen's blog.",
         url: "https://www.aimen-blog.com/projects", // URL for the Projects page
         siteName: "Aimen Blog",
         images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         card: "summary_large_image", // Twitter card type
         title: "Web Development Projects", // Twitter title
         description:
-            "Explore my personal and professional projects, built with Next.js, React, and other modern web technologies.",
+            "Explore my personal and professional projects, built with Next.js, React, and other modern web technologies. TIGHIOUART Aimen's blog.",
         images: [
             {
                 url: "https://www.aimen-blog.com/logo.png", // Image for Twitter card

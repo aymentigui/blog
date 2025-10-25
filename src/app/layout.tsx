@@ -13,15 +13,15 @@ const cairo = Cairo({
 });
 export const metadata : Metadata = {
   title: {
-    default :"Aimen Blog - Développement Web, React, Next.js et Projets",
+    default :"Aimen Blog - Development Web, React, Next.js",
     template: "%s - Aimen Blog"
   },
   description:
-    "Articles sur le développement web avec Next.js, PHP, WordPress, React JS et projets personnels.",
+    "Articles about web development with Next.js, PHP, WordPress, React.js, and personal projects. TIGHIOUART Aimen's blog.",
   openGraph: {
-    title: "Aimen Blog - Développement Web, React, Next.js et Projets",
+    title: "Aimen Blog - Development Web, React, Next.js",
     description:
-      "Découvrez des articles sur le développement web avec Next.js, PHP, WordPress, React JS, et plus encore.",
+      "Discover articles about web development with Next.js, PHP, WordPress, React.js, and more. TIGHIOUART Aimen's blog.",
     url: "https://www.aimen-blog.com",
     siteName: "Aimen Blog",
     images: [
@@ -35,9 +35,9 @@ export const metadata : Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aimen Blog - Développement Web, React, Next.js et Projets",
+    title: "Aimen Blog - Development Web, React, Next.js",
     description:
-      "Articles sur le développement web, Next.js, React JS, PHP et plus.",
+      "Articles about web development, Next.js, React.js, PHP, and more. TIGHIOUART Aimen's blog.",
     images: [
       {
         url : "https://www.aimen-blog.com/logo.png"

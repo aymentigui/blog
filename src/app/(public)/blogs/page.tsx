@@ -6,11 +6,11 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
     title: "Latest Articles on Web Development", // Title for SEO
     description:
-        "Explore the latest articles, tutorials, and tips on web development, React.js, Next.js, PHP, and more. Learn new techniques and improve your web development skills.",
+        "Explore the latest articles, tutorials, and tips on web development, React.js, Next.js, PHP, and more. Learn new techniques and improve your web development skills. TIGHIOUART Aimen's blog.",
     openGraph: {
         title: "Aimen Blog - Latest Articles on Web Development", // OpenGraph title
         description:
-            "Discover tutorials, tips, and articles on web development, React.js, Next.js, PHP, and much more.",
+            "Discover tutorials, tips, and articles on web development, React.js, Next.js, PHP, and much more. TIGHIOUART Aimen's blog.",
         url: "https://www.aimen-blog.com/blogs", // URL for the Blogs page
         siteName: "Aimen Blog",
         images: [
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         card: "summary_large_image", // Twitter card type
         title: "Latest Articles on Web Development", // Twitter title
         description:
-            "Explore tutorials, tips, and articles on web development with Next.js, React.js, PHP, and more.",
+            "Explore tutorials, tips, and articles on web development with Next.js, React.js, PHP, and more. TIGHIOUART Aimen's blog.",
         images: [
             {
                 url: "https://www.aimen-blog.com/logo.png", // Image for Twitter card
